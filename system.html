@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    <title>Overview | NIA OS</title>
+    <title>System | NIA OS</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -600,10 +600,10 @@
             </div>
             
                         <div class="nav">
-                <a href="index.html" class="nav-item active">
+                <a href="index.html" class="nav-item ">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </a>
-                <a href="system.html" class="nav-item ">
+                <a href="system.html" class="nav-item active">
                     <i class="fas fa-microchip"></i><span>System</span>
                 </a>
                 <a href="agents.html" class="nav-item ">
@@ -626,100 +626,112 @@
         
         <main class="main">
             <div class="page-header">
-                <h2><i class="fas fa-home" style="color: var(--accent-tesla);"></i> Overview</h2>
+                <h2><i class="fas fa-microchip" style="color: var(--accent-tesla);"></i> System</h2>
             </div>
             
-            <div class="hero" style="padding: var(--spacing-xl) 0;">
-                    <div class="hero-status">
-                        <span class="status-dot" id="status-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></span>
-                        <span>Status: <strong style="color: var(--accent-green);" id="gateway-status-text">ACTIVE</strong></span>
-                        <span id="local-mode-badge" style="display: none; margin-left: 8px; font-size: 0.75rem; background: var(--accent-blue); color: white; padding: 2px 8px; border-radius: 4px;">LOCAL MODE</span>
-                    </div>
-                    <div class="hero-meta">
-                        <span><i class="fas fa-brain"></i> Model: <span id="current-model">kimi-k2.5-cloud</span></span>
-                        <span><i class="fas fa-clock"></i> Gateway: <span id="gateway-state">Online</span></span>
-                        <span><i class="fas fa-code-branch"></i> <span id="gateway-version">v2026.2.13</span></span>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
-                        <i class="fas fa-sync"></i> Refresh All
-                    </button>
-                </div>
+            <h2 class="section-title"><i class="fas fa-microchip" style="color: var(--accent-tesla);"></i>System</h2>
 
-                <div class="grid-4">
+                <div class="grid-2">
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Operation</span></div>
-                        <div class="card-value" style="color: var(--accent-green);">Online</div>
-                        <div class="card-subtitle">Local gateway active</div>
-                        <button class="btn btn-danger btn-small" style="margin-top: var(--spacing-md);" onclick="confirmRestart()">
-                            <i class="fas fa-power-off"></i> Restart
-                        </button>
+                        <div class="card-header">
+                            <span class="card-title">Gateway Status</span>
+                            <span class="badge badge-green">Online</span>
+                        </div>
+                        <div class="list" style="margin-top: var(--spacing-md);">
+                            <div class="list-item">
+                                <div class="list-info">
+                                    <div class="list-icon green"><i class="fas fa-server"></i></div>
+                                    <div class="list-text"><h4>Mode</h4><p>Local (loopback)</p></div>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-info">
+                                    <div class="list-icon blue"><i class="fas fa-network-wired"></i></div>
+                                    <div class="list-text"><h4>Port</h4><p>18789</p></div>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-info">
+                                    <div class="list-icon purple"><i class="fas fa-fingerprint"></i></div>
+                                    <div class="list-text"><h4>Authentication</h4><p>Token (configured)</p></div>
+                                </div>
+                            </div>
+                            <div class="list-item">
+                                <div class="list-info">
+                                    <div class="list-icon orange"><i class="fas fa-shield-alt"></i></div>
+                                    <div class="list-text"><h4>Tailscale</h4><p>Disabled</p></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                            <button class="btn btn-danger" onclick="confirmRestart()">
+                                <i class="fas fa-redo"></i> Restart
+                            </button>
+                            <button class="btn btn-primary" onclick="checkUpdate()">
+                                <i class="fas fa-download"></i> Update
+                            </button>
+                        </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Primary Agent</span></div>
-                        <div class="card-value">Nia</div>
-                        <div class="card-subtitle">Master • 3 active sessions</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents', this)">
-                            <i class="fas fa-cog"></i> Manage
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Active Connections</span></div>
-                        <div class="card-value" style="color: var(--accent-blue);">5</div>
-                        <div class="card-subtitle">Telegram • Email • GitHub • Browser • Cron</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections', this)">
-                            <i class="fas fa-plug"></i> View
-                        </button>
-                    </div>
-
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Security</span></div>
-                        <div class="card-value" style="color: var(--accent-orange);">2</div>
-                        <div class="card-subtitle">Critical alerts pending</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security', this)">
-                            <i class="fas fa-exclamation-triangle"></i> Review
-                        </button>
+                        <div class="card-header"><span class="card-title">Backups</span></div>
+                        <div class="empty-state">
+                            <i class="fas fa-archive"></i>
+                            <p>No automatic backup configured</p>
+                            <button class="btn btn-primary" style="margin-top: var(--spacing-md);">
+                                <i class="fas fa-plus"></i> Configure Backup
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Recent Activity</span></div>
-                    <div class="activity">
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(59, 158, 255, 0.15); color: var(--accent-blue);">
-                                <i class="fab fa-telegram"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Message received — Openclaw Stuff</p>
-                                <div class="activity-time">Just now</div>
-                            </div>
+                    <div class="card-header">
+                        <span class="card-title">Cron Jobs</span>
+                        <button class="btn btn-primary btn-small" onclick="openCronModal()">
+                            <i class="fas fa-plus"></i> New
+                        </button>
+                    </div>
+                    <div id="cron-list" class="list" style="margin-top: var(--spacing-md);">
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <p>No cron jobs configured</p>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-save"></i>
+                    </div>
+                </div>
+
+                <div class="card" style="border: 1px solid var(--bg-card-hover);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--text-muted);">Advanced Mode</span>
+                        <label class="toggle">
+                            <input type="checkbox" id="advanced-mode" onchange="toggleAdvanced()">
+                            <span class="toggle-switch"></span>
+                        </label>
+                    </div>
+                    <div id="advanced-content" style="display: none; margin-top: var(--spacing-md);">
+                        <div class="grid-2">
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Gateway PID</label>
+                                    <input type="text" class="form-input" value="1320" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Node Version</label>
+                                    <input type="text" class="form-input" value="25.6.1" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">System</label>
+                                    <input type="text" class="form-input" value="macOS 15.3.1 (arm64)" readonly>
+                                </div>
                             </div>
-                            <div class="activity-text">
-                                <p>Backup created — Mission Control V3</p>
-                                <div class="activity-time">30 minutes ago</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(124, 58, 237, 0.15); color: var(--accent-purple);">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Dashboard updated — NIA OS V1</p>
-                                <div class="activity-time">1 hour ago</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Config applied — Telegram bot active</p>
-                                <div class="activity-time">3 hours ago</div>
+                            <div>
+                                <div class="form-group">
+                                    <label class="form-label">Recent Logs</label>
+                                    <textarea class="form-textarea" readonly style="font-family: monospace; font-size: 0.8125rem;">[INFO] Gateway started on port 18789
+[INFO] Telegram channel connected
+[INFO] Session agent:main:main initialized
+[INFO] 3 active sessions</textarea>
+                                </div>
                             </div>
                         </div>
                     </div>

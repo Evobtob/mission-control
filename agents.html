@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    <title>Overview | NIA OS</title>
+    <title>Agents | NIA OS</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -600,13 +600,13 @@
             </div>
             
                         <div class="nav">
-                <a href="index.html" class="nav-item active">
+                <a href="index.html" class="nav-item ">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </a>
                 <a href="system.html" class="nav-item ">
                     <i class="fas fa-microchip"></i><span>System</span>
                 </a>
-                <a href="agents.html" class="nav-item ">
+                <a href="agents.html" class="nav-item active">
                     <i class="fas fa-robot"></i><span>Agents</span>
                 </a>
                 <a href="connections.html" class="nav-item ">
@@ -626,102 +626,136 @@
         
         <main class="main">
             <div class="page-header">
-                <h2><i class="fas fa-home" style="color: var(--accent-tesla);"></i> Overview</h2>
+                <h2><i class="fas fa-robot" style="color: var(--accent-tesla);"></i> Agents</h2>
             </div>
             
-            <div class="hero" style="padding: var(--spacing-xl) 0;">
-                    <div class="hero-status">
-                        <span class="status-dot" id="status-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></span>
-                        <span>Status: <strong style="color: var(--accent-green);" id="gateway-status-text">ACTIVE</strong></span>
-                        <span id="local-mode-badge" style="display: none; margin-left: 8px; font-size: 0.75rem; background: var(--accent-blue); color: white; padding: 2px 8px; border-radius: 4px;">LOCAL MODE</span>
-                    </div>
-                    <div class="hero-meta">
-                        <span><i class="fas fa-brain"></i> Model: <span id="current-model">kimi-k2.5-cloud</span></span>
-                        <span><i class="fas fa-clock"></i> Gateway: <span id="gateway-state">Online</span></span>
-                        <span><i class="fas fa-code-branch"></i> <span id="gateway-version">v2026.2.13</span></span>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
-                        <i class="fas fa-sync"></i> Refresh All
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                    <h2 class="section-title" style="margin: 0;">
+                        <i class="fas fa-robot" style="color: var(--accent-tesla);"></i>Agents
+                    </h2>
+                    <button class="btn btn-primary" onclick="openAgentModal()">
+                        <i class="fas fa-plus"></i> New Agent
                     </button>
                 </div>
 
-                <div class="grid-4">
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Operation</span></div>
-                        <div class="card-value" style="color: var(--accent-green);">Online</div>
-                        <div class="card-subtitle">Local gateway active</div>
-                        <button class="btn btn-danger btn-small" style="margin-top: var(--spacing-md);" onclick="confirmRestart()">
-                            <i class="fas fa-power-off"></i> Restart
-                        </button>
+                <div id="agents-list" class="list">
+                    <!-- Nia Master -->
+                    <div class="list-item agent-card" data-agent="nia" onclick="openAgentDetail('nia')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon red"><i class="fas fa-crown"></i></div>
+                            <div class="list-text">
+                                <h4>Nia <span class="badge badge-green">Master</span></h4>
+                                <p>Central Coordinator • kimik2.5:cloud • 3 sessions</p>
+                            </div>
+                        </div>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('nia')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('nia')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Primary Agent</span></div>
-                        <div class="card-value">Nia</div>
-                        <div class="card-subtitle">Master • 3 active sessions</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents', this)">
-                            <i class="fas fa-cog"></i> Manage
-                        </button>
+                    <!-- Neo -->
+                    <div class="list-item agent-card" data-agent="neo" onclick="openAgentDetail('neo')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon green"><i class="fas fa-code"></i></div>
+                            <div class="list-text">
+                                <h4>Neo <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Software Architect • Not configured</p>
+                            </div>
+                        </div>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('neo')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('neo')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Active Connections</span></div>
-                        <div class="card-value" style="color: var(--accent-blue);">5</div>
-                        <div class="card-subtitle">Telegram • Email • GitHub • Browser • Cron</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections', this)">
-                            <i class="fas fa-plug"></i> View
-                        </button>
+                    <!-- RoboCop -->
+                    <div class="list-item agent-card" data-agent="robocop" onclick="openAgentDetail('robocop')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon purple"><i class="fas fa-shield-alt"></i></div>
+                            <div class="list-text">
+                                <h4>RoboCop <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Security Gatekeeper • Not configured</p>
+                            </div>
+                        </div>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('robocop')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('robocop')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header"><span class="card-title">Security</span></div>
-                        <div class="card-value" style="color: var(--accent-orange);">2</div>
-                        <div class="card-subtitle">Critical alerts pending</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security', this)">
-                            <i class="fas fa-exclamation-triangle"></i> Review
-                        </button>
+                    <!-- Julia -->
+                    <div class="list-item agent-card" data-agent="julia" onclick="openAgentDetail('julia')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon" style="background: rgba(247, 144, 9, 0.15); color: var(--accent-orange);">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="list-text">
+                                <h4>Julia <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Executive Assistant • Not configured</p>
+                            </div>
+                        </div>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('julia')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('julia')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div class="card">
-                    <div class="card-header"><span class="card-title">Recent Activity</span></div>
-                    <div class="activity">
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(59, 158, 255, 0.15); color: var(--accent-blue);">
-                                <i class="fab fa-telegram"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Message received — Openclaw Stuff</p>
-                                <div class="activity-time">Just now</div>
-                            </div>
+                <div id="agent-preview" class="card" style="margin-top: var(--spacing-lg); display: none;">
+                    <div class="card-header">
+                        <span class="card-title" id="preview-title">Agent Details</span>
+                        <button class="btn btn-secondary btn-small" onclick="closeAgentPreview()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="grid-2" style="margin-top: var(--spacing-md);">
+                        <div>
+                            <span class="form-label">Primary Model</span>
+                            <p id="preview-model" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-save"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Backup created — Mission Control V3</p>
-                                <div class="activity-time">30 minutes ago</div>
-                            </div>
+                        <div>
+                            <span class="form-label">Fallback</span>
+                            <p id="preview-fallback" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(124, 58, 237, 0.15); color: var(--accent-purple);">
-                                <i class="fas fa-code"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Dashboard updated — NIA OS V1</p>
-                                <div class="activity-time">1 hour ago</div>
-                            </div>
+                        <div>
+                            <span class="form-label">Tools Profile</span>
+                            <p id="preview-tools" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Config applied — Telegram bot active</p>
-                                <div class="activity-time">3 hours ago</div>
-                            </div>
+                        <div>
+                            <span class="form-label">Thinking Mode</span>
+                            <p id="preview-thinking" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
+                    </div>
+                    <div style="margin-top: var(--spacing-lg);">
+                        <span class="form-label">SOUL.md Preview</span>
+                        <div id="preview-soul" style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: 8px; font-family: monospace; font-size: 0.8125rem; color: var(--text-secondary); max-height: 150px; overflow-y: auto;">
+                            Click an agent to view details...
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                        <button class="btn btn-primary" onclick="openAgentDetail(currentAgent)">
+                            <i class="fas fa-edit"></i> Full Edit
+                        </button>
+                        <button class="btn btn-danger" onclick="confirmDeleteAgent(currentAgent)">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
                     </div>
                 </div>
         </main>

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    <title>Overview | NIA OS</title>
+    <title>Cron Jobs | NIA OS</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -600,7 +600,7 @@
             </div>
             
                         <div class="nav">
-                <a href="index.html" class="nav-item active">
+                <a href="index.html" class="nav-item ">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </a>
                 <a href="system.html" class="nav-item ">
@@ -618,7 +618,7 @@
                 <a href="tasks.html" class="nav-item ">
                     <i class="fas fa-tasks"></i><span>Tasks</span>
                 </a>
-                <a href="cron.html" class="nav-item ">
+                <a href="cron.html" class="nav-item active">
                     <i class="fas fa-clock"></i><span>Cron Jobs</span>
                 </a>
             </div>
@@ -626,100 +626,84 @@
         
         <main class="main">
             <div class="page-header">
-                <h2><i class="fas fa-home" style="color: var(--accent-tesla);"></i> Overview</h2>
+                <h2><i class="fas fa-clock" style="color: var(--accent-tesla);"></i> Cron Jobs</h2>
             </div>
             
-            <div class="hero" style="padding: var(--spacing-xl) 0;">
-                    <div class="hero-status">
-                        <span class="status-dot" id="status-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></span>
-                        <span>Status: <strong style="color: var(--accent-green);" id="gateway-status-text">ACTIVE</strong></span>
-                        <span id="local-mode-badge" style="display: none; margin-left: 8px; font-size: 0.75rem; background: var(--accent-blue); color: white; padding: 2px 8px; border-radius: 4px;">LOCAL MODE</span>
+            <div id="cron-cors-notice" class="card" style="border: 1px solid var(--accent-orange); display: none; margin-bottom: var(--spacing-lg);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-orange);">
+                            <i class="fas fa-info-circle"></i> Modo Demo - Sincronização Limitada
+                        </span>
                     </div>
-                    <div class="hero-meta">
-                        <span><i class="fas fa-brain"></i> Model: <span id="current-model">kimi-k2.5-cloud</span></span>
-                        <span><i class="fas fa-clock"></i> Gateway: <span id="gateway-state">Online</span></span>
-                        <span><i class="fas fa-code-branch"></i> <span id="gateway-version">v2026.2.13</span></span>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
-                        <i class="fas fa-sync"></i> Refresh All
+                    <p style="color: var(--text-secondary); font-size: 0.9375rem; margin-top: 8px;">
+                        GitHub Pages não consegue conectar-se ao gateway OpenClaw local (CORS). 
+                        <a href="#" onclick="showCORSHelp(); return false;" style="color: var(--accent-tesla);">Clique aqui</a> 
+                        para instruções de como executar localmente com sincronização completa.
+                    </p>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
+                    <h2 class="section-title" style="margin: 0;">
+                        <i class="fas fa-clock" style="color: var(--accent-tesla);"></i>Cron Jobs
+                    </h2>
+                    <button class="btn btn-primary" onclick="openCronPageModal()">
+                        <i class="fas fa-plus"></i> New Cron Job
                     </button>
                 </div>
 
                 <div class="grid-4">
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Operation</span></div>
-                        <div class="card-value" style="color: var(--accent-green);">Online</div>
-                        <div class="card-subtitle">Local gateway active</div>
-                        <button class="btn btn-danger btn-small" style="margin-top: var(--spacing-md);" onclick="confirmRestart()">
-                            <i class="fas fa-power-off"></i> Restart
-                        </button>
+                        <div class="card-header"><span class="card-title">Total Jobs</span></div>
+                        <div class="card-value" id="cron-total-count">0</div>
+                        <div class="card-subtitle">Configured jobs</div>
                     </div>
-
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Primary Agent</span></div>
-                        <div class="card-value">Nia</div>
-                        <div class="card-subtitle">Master • 3 active sessions</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents', this)">
-                            <i class="fas fa-cog"></i> Manage
-                        </button>
+                        <div class="card-header"><span class="card-title">Active</span></div>
+                        <div class="card-value" style="color: var(--accent-green);" id="cron-active-count">0</div>
+                        <div class="card-subtitle">Enabled and running</div>
                     </div>
-
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Active Connections</span></div>
-                        <div class="card-value" style="color: var(--accent-blue);">5</div>
-                        <div class="card-subtitle">Telegram • Email • GitHub • Browser • Cron</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections', this)">
-                            <i class="fas fa-plug"></i> View
-                        </button>
+                        <div class="card-header"><span class="card-title">Paused</span></div>
+                        <div class="card-value" style="color: var(--accent-orange);" id="cron-paused-count">0</div>
+                        <div class="card-subtitle">Disabled jobs</div>
                     </div>
-
                     <div class="card">
-                        <div class="card-header"><span class="card-title">Security</span></div>
-                        <div class="card-value" style="color: var(--accent-orange);">2</div>
-                        <div class="card-subtitle">Critical alerts pending</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security', this)">
-                            <i class="fas fa-exclamation-triangle"></i> Review
-                        </button>
+                        <div class="card-header"><span class="card-title">Next Run</span></div>
+                        <div class="card-value" style="color: var(--accent-blue); font-size: 1.25rem;" id="cron-next-run">--</div>
+                        <div class="card-subtitle">Closest scheduled</div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header"><span class="card-title">Recent Activity</span></div>
-                    <div class="activity">
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(59, 158, 255, 0.15); color: var(--accent-blue);">
-                                <i class="fab fa-telegram"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Message received — Openclaw Stuff</p>
-                                <div class="activity-time">Just now</div>
-                            </div>
+                    <div class="card-header">
+                        <span class="card-title">All Cron Jobs</span>
+                        <div class="list-actions">
+                            <button class="btn btn-secondary btn-small" onclick="refreshCronJobs()">
+                                <i class="fas fa-sync"></i> Refresh
+                            </button>
                         </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-save"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Backup created — Mission Control V3</p>
-                                <div class="activity-time">30 minutes ago</div>
-                            </div>
+                    </div>
+                    <div id="cron-jobs-list" class="list" style="margin-top: var(--spacing-md);">
+                        <div class="empty-state">
+                            <i class="fas fa-clock"></i>
+                            <p>No cron jobs configured</p>
+                            <button class="btn btn-primary" style="margin-top: var(--spacing-md);" onclick="openCronPageModal()">
+                                <i class="fas fa-plus"></i> Create First Job
+                            </button>
                         </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header"><span class="card-title">Recent Runs</span></div>
+                    <div id="cron-history-list" class="activity" style="margin-top: var(--spacing-md);">
                         <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(124, 58, 237, 0.15); color: var(--accent-purple);">
-                                <i class="fas fa-code"></i>
+                            <div class="activity-icon" style="background: var(--bg-elevated); color: var(--text-tertiary);">
+                                <i class="fas fa-history"></i>
                             </div>
                             <div class="activity-text">
-                                <p>Dashboard updated — NIA OS V1</p>
-                                <div class="activity-time">1 hour ago</div>
-                            </div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>Config applied — Telegram bot active</p>
-                                <div class="activity-time">3 hours ago</div>
+                                <p>No execution history yet</p>
+                                <div class="activity-time">--</div>
                             </div>
                         </div>
                     </div>
