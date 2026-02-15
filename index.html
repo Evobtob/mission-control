@@ -113,7 +113,8 @@
 
         .nav { display: flex; flex-direction: column; gap: 4px; }
 
-        .nav-item {
+        .nav-item,
+        a.nav-item {
             display: flex;
             align-items: center;
             gap: var(--spacing-md);
@@ -129,6 +130,7 @@
             text-align: left;
             font-family: inherit;
             width: 100%;
+            text-decoration: none;
         }
 
         .nav-item:hover {
@@ -588,27 +590,27 @@
             </div>
 
             <div class="nav">
-                <button class="nav-item active" onclick="showPage('overview', this)">
+                <a href="#overview" class="nav-item active" data-page="overview">
                     <i class="fas fa-home"></i><span>Overview</span>
-                </button>
-                <button class="nav-item" onclick="showPage('system', this)">
+                </a>
+                <a href="#system" class="nav-item" data-page="system">
                     <i class="fas fa-microchip"></i><span>System</span>
-                </button>
-                <button class="nav-item" onclick="showPage('agents', this)">
+                </a>
+                <a href="#agents" class="nav-item" data-page="agents">
                     <i class="fas fa-robot"></i><span>Agents</span>
-                </button>
-                <button class="nav-item" onclick="showPage('connections', this)">
+                </a>
+                <a href="#connections" class="nav-item" data-page="connections">
                     <i class="fas fa-link"></i><span>Connections</span>
-                </button>
-                <button class="nav-item" onclick="showPage('security', this)">
+                </a>
+                <a href="#security" class="nav-item" data-page="security">
                     <i class="fas fa-shield-alt"></i><span>Security</span>
-                </button>
-                <button class="nav-item" onclick="showPage('tasks', this)">
+                </a>
+                <a href="#tasks" class="nav-item" data-page="tasks">
                     <i class="fas fa-tasks"></i><span>Tasks</span>
-                </button>
-                <button class="nav-item" onclick="showPage('cron', this)">
+                </a>
+                <a href="#cron" class="nav-item" data-page="cron">
                     <i class="fas fa-clock"></i><span>Cron Jobs</span>
-                </button>
+                </a>
             </div>
         </nav>
 
@@ -1660,29 +1662,19 @@ I am [Name], a specialized assistant for...
             // Update nav items
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
 
-            // Get the clicked element - either passed directly or from event
-            let activeElement = clickedElement;
-            if (!activeElement && typeof event !== 'undefined' && event.currentTarget) {
-                activeElement = event.currentTarget;
-            }
-
-            if (activeElement) {
-                // If it's not a nav-item (e.g., a button inside a card), find parent nav-item
-                if (!activeElement.classList.contains('nav-item')) {
-                    const parentNav = activeElement.closest('.nav-item');
-                    if (parentNav) parentNav.classList.add('active');
-                } else {
-                    activeElement.classList.add('active');
+            // Find nav item by pageId (using data-page attribute)
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === pageId) {
+                    item.classList.add('active');
                 }
-            } else {
-                // Fallback: find nav item by pageId
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(pageId)) {
-                        item.classList.add('active');
-                    }
-                });
-            }
+            });
+        }
+
+        // Hash-based navigation handler
+        function handleHashChange() {
+            const hash = window.location.hash.slice(1) || 'overview';
+            showPage(hash);
         }
 
         function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
@@ -2690,23 +2682,9 @@ SOLUÇÃO - Modo Local com Bridge:
             });
         }, 1000);
 
-        // Setup navigation click handlers programmatically (fallback for inline onclick)
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.nav-item').forEach(function(item) {
-                item.addEventListener('click', function(e) {
-                    const onclick = this.getAttribute('onclick');
-                    if (onclick && onclick.includes('showPage')) {
-                        // Extract pageId from onclick
-                        const match = onclick.match(/showPage\('([^']+)'/);
-                        if (match) {
-                            e.preventDefault();
-                            showPage(match[1], this);
-                        }
-                    }
-                });
-            });
-            console.log('Navigation handlers attached');
-        });
+        // Hash-based navigation - simple and reliable
+        window.addEventListener('hashchange', handleHashChange);
+        window.addEventListener('load', handleHashChange);
     </script>
 </body>
 </html>
