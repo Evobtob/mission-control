@@ -27,8 +27,8 @@ import json
 import os
 import subprocess
 
-PORT = 8080
-BRIDGE_PORT = 18790  # Porta do OpenClaw Bridge
+PORT = 8888  # Porta alternativa (8080 pode estar ocupada)
+BRIDGE_PORT = 18791  # Porta do OpenClaw Bridge
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 

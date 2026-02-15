@@ -43,13 +43,16 @@ cleanup() {
 # Captura Ctrl+C
 trap cleanup INT TERM
 
+BRIDGE_PORT=18791
+SERVER_PORT=8888
+
 echo "📋 Arquitetura:"
-echo "   1. OpenClaw Bridge (porta 18790) ← CLI → OpenClaw"
-echo "   2. Mission Control Server (porta 8080) ← Proxy → Bridge"
+echo "   1. OpenClaw Bridge (porta $BRIDGE_PORT) ← CLI → OpenClaw"
+echo "   2. Mission Control Server (porta $SERVER_PORT) ← Proxy → Bridge"
 echo ""
 
 # Inicia o Bridge em background
-echo "🦞 A iniciar OpenClaw Bridge na porta 18790..."
+echo "🦞 A iniciar OpenClaw Bridge na porta $BRIDGE_PORT..."
 python3 openclaw-bridge.py > /tmp/openclaw-bridge.log 2>&1 &
 BRIDGE_PID=$!
 
@@ -65,7 +68,7 @@ echo "   ✅ Bridge iniciado (PID: $BRIDGE_PID)"
 echo ""
 
 # Inicia o Mission Control Server em background
-echo "🌐 A iniciar Mission Control Server na porta 8080..."
+echo "🌐 A iniciar Mission Control Server na porta $SERVER_PORT..."
 python3 local/server.py > /tmp/mission-control-server.log 2>&1 &
 SERVER_PID=$!
 
@@ -84,8 +87,8 @@ echo ""
 echo "=========================================="
 echo "🎉 NIA OS está pronto!"
 echo ""
-echo "🔗 Acede em: http://localhost:8080"
-echo "📖 Documentação API: http://localhost:18790/"
+echo "🔗 Acede em: http://localhost:$SERVER_PORT"
+echo "📖 Documentação API: http://localhost:$BRIDGE_PORT/"
 echo ""
 echo "⚠️  Para parar, prime Ctrl+C"
 echo "=========================================="

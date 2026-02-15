@@ -27,7 +27,7 @@ import os
 import sys
 from urllib.parse import urlparse, parse_qs
 
-PORT = 18790  # Porta diferente do gateway (18789)
+PORT = 18791  # Porta diferente do gateway (18789)
 
 class OpenClawBridgeHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, format, *args):
