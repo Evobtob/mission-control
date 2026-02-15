@@ -1200,19 +1200,6 @@
 
             <!-- Cron Jobs -->
             <div id="page-cron" class="page">
-                <div id="cron-cors-notice" class="card" style="border: 1px solid var(--accent-orange); display: none; margin-bottom: var(--spacing-lg);">
-                    <div class="card-header">
-                        <span class="card-title" style="color: var(--accent-orange);">
-                            <i class="fas fa-info-circle"></i> Modo Demo - Sincronização Limitada
-                        </span>
-                    </div>
-                    <p style="color: var(--text-secondary); font-size: 0.9375rem; margin-top: 8px;">
-                        GitHub Pages não consegue conectar-se ao gateway OpenClaw local (CORS). 
-                        <a href="#" onclick="showCORSHelp(); return false;" style="color: var(--accent-tesla);">Clique aqui</a> 
-                        para instruções de como executar localmente com sincronização completa.
-                    </p>
-                </div>
-
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
                     <h2 class="section-title" style="margin: 0;">
                         <i class="fas fa-clock" style="color: var(--accent-tesla);"></i>Cron Jobs
@@ -2289,52 +2276,11 @@ I am Julia Matos, digital executive secretary.
             const statusText = document.getElementById('gateway-status-text');
             const state = document.getElementById('gateway-state');
             if (statusText) {
-                statusText.textContent = 'OFFLINE (CORS)';
+                statusText.textContent = 'OFFLINE';
                 statusText.style.color = 'var(--accent-tesla)';
             }
-            if (state) state.textContent = 'CORS Blocked';
-
-            // Check if running on GitHub Pages
-            const isGitHubPages = window.location.hostname.includes('github.io');
-
-            if (isGitHubPages && !window.corsWarningShown) {
-                window.corsWarningShown = true;
-
-                // Show banner on page
-                const helpHTML = `
-<div id="cors-banner" style="position: fixed; top: 0; left: 0; right: 0; background: var(--accent-tesla); color: white; padding: 12px 16px; z-index: 9999; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
-    <span><i class="fas fa-exclamation-triangle"></i> <strong>CORS Blocked:</strong> GitHub Pages cannot connect to localhost. Run locally for live data sync.</span>
-    <button onclick="showCORSHelp()" style="background: white; color: var(--accent-tesla); border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: 600;">Fix</button>
-</div>
-                `;
-                document.body.insertAdjacentHTML('afterbegin', helpHTML);
-
-                // Also show notice on Cron Jobs page
-                const cronNotice = document.getElementById('cron-cors-notice');
-                if (cronNotice) cronNotice.style.display = 'block';
-            }
-
-            console.warn('Mission Control CORS: Browser blocked connection to localhost:18789. Run Mission Control locally for full sync.');
-        }
-
-        function showCORSHelp() {
-            alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
-
-O Mission Control no GitHub Pages não consegue ligar-se ao gateway OpenClaw em localhost:18789 por causa das restrições de segurança do browser (CORS).
-
-SOLUÇÃO - Modo Local:
-
-1. Abre o Terminal no Mac
-2. Executa:
-   cd ~/.openclaw/workspace/mission-control
-   python3 local/server.py
-
-3. Abre no browser:
-   http://localhost:8080
-
-4. Agora tem sincronização completa com OpenClaw!
-
-O token é guardado automaticamente.`);
+            if (state) state.textContent = 'Disconnected';
+            console.warn('Mission Control: Connect to OpenClaw gateway to enable live data. Run: openclaw gateway status');
         }
 
         // Fetch Gateway Status
