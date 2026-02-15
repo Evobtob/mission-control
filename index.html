@@ -588,25 +588,25 @@
             </div>
 
             <div class="nav">
-                <button class="nav-item active" onclick="showPage('overview')">
+                <button class="nav-item active" onclick="showPage('overview', this)">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </button>
-                <button class="nav-item" onclick="showPage('system')">
+                <button class="nav-item" onclick="showPage('system', this)">
                     <i class="fas fa-microchip"></i><span>System</span>
                 </button>
-                <button class="nav-item" onclick="showPage('agents')">
+                <button class="nav-item" onclick="showPage('agents', this)">
                     <i class="fas fa-robot"></i><span>Agents</span>
                 </button>
-                <button class="nav-item" onclick="showPage('connections')">
+                <button class="nav-item" onclick="showPage('connections', this)">
                     <i class="fas fa-link"></i><span>Connections</span>
                 </button>
-                <button class="nav-item" onclick="showPage('security')">
+                <button class="nav-item" onclick="showPage('security', this)">
                     <i class="fas fa-shield-alt"></i><span>Security</span>
                 </button>
-                <button class="nav-item" onclick="showPage('tasks')">
+                <button class="nav-item" onclick="showPage('tasks', this)">
                     <i class="fas fa-tasks"></i><span>Tasks</span>
                 </button>
-                <button class="nav-item" onclick="showPage('cron')">
+                <button class="nav-item" onclick="showPage('cron', this)">
                     <i class="fas fa-clock"></i><span>Cron Jobs</span>
                 </button>
             </div>
@@ -646,7 +646,7 @@
                         <div class="card-header"><span class="card-title">Primary Agent</span></div>
                         <div class="card-value">Nia</div>
                         <div class="card-subtitle">Master • 3 active sessions</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents')">
+                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents', this)">
                             <i class="fas fa-cog"></i> Manage
                         </button>
                     </div>
@@ -655,7 +655,7 @@
                         <div class="card-header"><span class="card-title">Active Connections</span></div>
                         <div class="card-value" style="color: var(--accent-blue);">5</div>
                         <div class="card-subtitle">Telegram • Email • GitHub • Browser • Cron</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections')">
+                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections', this)">
                             <i class="fas fa-plug"></i> View
                         </button>
                     </div>
@@ -664,7 +664,7 @@
                         <div class="card-header"><span class="card-title">Security</span></div>
                         <div class="card-value" style="color: var(--accent-orange);">2</div>
                         <div class="card-subtitle">Critical alerts pending</div>
-                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security')">
+                        <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security', this)">
                             <i class="fas fa-exclamation-triangle"></i> Review
                         </button>
                     </div>
@@ -1028,7 +1028,7 @@
                         </div>
                         <div class="list-actions">
                             <button class="btn btn-secondary btn-small" onclick="viewConnection('cron')"><i class="fas fa-eye"></i></button>
-                            <button class="btn btn-primary btn-small" onclick="showPage('system')"><i class="fas fa-plus"></i></button>
+                            <button class="btn btn-primary btn-small" onclick="showPage('cron', this)"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                 </div>
@@ -1650,11 +1650,23 @@ I am [Name], a specialized assistant for...
     </div>
 
     <script>
-        function showPage(pageId) {
+        function showPage(pageId, clickedElement) {
+            // Hide all pages
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show target page
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) targetPage.classList.add('active');
+
+            // Update nav items
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById('page-' + pageId).classList.add('active');
-            event.target.closest('.nav-item').classList.add('active');
+            if (clickedElement) {
+                clickedElement.classList.add('active');
+            } else {
+                // Try to find nav item by onclick attribute
+                const navItem = document.querySelector(`.nav-item[onclick*="'${pageId}'"]`) ||
+                                  document.querySelector(`.nav-item[onclick*="${pageId}"]`);
+                if (navItem) navItem.classList.add('active');
+            }
         }
 
         function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
