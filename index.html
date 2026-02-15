@@ -618,8 +618,9 @@
             <div id="page-overview" class="page active">
                 <div class="hero" style="padding: var(--spacing-xl) 0;">
                     <div class="hero-status">
-                        <span class="status-dot"></span>
+                        <span class="status-dot" id="status-dot" style="background: var(--accent-green); box-shadow: 0 0 8px var(--accent-green);"></span>
                         <span>Status: <strong style="color: var(--accent-green);" id="gateway-status-text">ACTIVE</strong></span>
+                        <span id="local-mode-badge" style="display: none; margin-left: 8px; font-size: 0.75rem; background: var(--accent-blue); color: white; padding: 2px 8px; border-radius: 4px;">LOCAL MODE</span>
                     </div>
                     <div class="hero-meta">
                         <span><i class="fas fa-brain"></i> Model: <span id="current-model">kimi-k2.5-cloud</span></span>
@@ -629,9 +630,6 @@
                     <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
                         <i class="fas fa-sync"></i> Refresh All
                     </button>
-                    <div class="hero-status">
-                        <span class="status-dot"></span>
-                        <span>Status: <strong style="color: var(--accent-green);">ACTIVE</strong></span>
                     </div>
                     <div class="hero-meta">
                         <span><i class="fas fa-brain"></i> Model: kimi-k2.5-cloud</span>
@@ -2298,9 +2296,12 @@ I am Julia Matos, digital executive secretary.
         function showConnectionError(message) {
             const statusText = document.getElementById('gateway-status-text');
             const state = document.getElementById('gateway-state');
+            const dot = document.getElementById('status-dot');
+            const localBadge = document.getElementById('local-mode-badge');
 
             // Check if running on GitHub Pages
             const isGitHubPages = window.location.hostname.includes('github.io');
+            const localMode = isLocalMode();
 
             if (isGitHubPages) {
                 if (statusText) {
@@ -2308,19 +2309,37 @@ I am Julia Matos, digital executive secretary.
                     statusText.style.color = 'var(--accent-tesla)';
                 }
                 if (state) state.textContent = 'Use Local Mode';
+                if (dot) {
+                    dot.style.background = 'var(--accent-tesla)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-tesla)';
+                }
+            } else if (localMode) {
+                // Local mode - show Local Mode badge but keep trying
+                if (statusText) {
+                    statusText.textContent = 'CONNECTING...';
+                    statusText.style.color = 'var(--accent-orange)';
+                }
+                if (state) state.textContent = 'Via Proxy';
+                if (dot) {
+                    dot.style.background = 'var(--accent-orange)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-orange)';
+                }
+                if (localBadge) localBadge.style.display = 'inline-block';
             } else {
-                // Local mode - probably gateway not running
+                // Other mode
                 if (statusText) {
                     statusText.textContent = 'OFFLINE';
                     statusText.style.color = 'var(--accent-tesla)';
                 }
                 if (state) state.textContent = 'Check Gateway';
+                if (dot) {
+                    dot.style.background = 'var(--accent-tesla)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-tesla)';
+                }
             }
 
             if (isGitHubPages && !window.corsWarningShown) {
                 window.corsWarningShown = true;
-
-                // Show banner on page
                 const helpHTML = `
 <div id="cors-banner" style="position: fixed; top: 0; left: 0; right: 0; background: var(--accent-tesla); color: white; padding: 12px 16px; z-index: 9999; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
     <span><i class="fas fa-exclamation-triangle"></i> <strong>CORS Blocked:</strong> GitHub Pages cannot connect to localhost. Run locally for live data sync.</span>
@@ -2328,13 +2347,11 @@ I am Julia Matos, digital executive secretary.
 </div>
                 `;
                 document.body.insertAdjacentHTML('afterbegin', helpHTML);
-
-                // Also show notice on Cron Jobs page
                 const cronNotice = document.getElementById('cron-cors-notice');
                 if (cronNotice) cronNotice.style.display = 'block';
             }
 
-            console.warn('Mission Control CORS: Browser blocked connection to localhost:18789. Run Mission Control locally for full sync.');
+            console.warn('Mission Control: Connection issue -', message);
         }
 
         function showCORSHelp() {
@@ -2395,14 +2412,23 @@ O token é guardado automaticamente.`);
             const state = document.getElementById('gateway-state');
             const version = document.getElementById('gateway-version');
             const model = document.getElementById('current-model');
+            const dot = document.getElementById('status-dot');
+            const localBadge = document.getElementById('local-mode-badge');
 
             if (statusText) {
                 statusText.textContent = status.running ? 'ACTIVE' : 'INACTIVE';
                 statusText.style.color = status.running ? 'var(--accent-green)' : 'var(--accent-tesla)';
             }
-            if (state) state.textContent = status.running ? 'Online' : 'Offline';
+            if (state) state.textContent = status.running ? 'Online (Proxy)' : 'Offline';
             if (version) version.textContent = status.version || 'v2026.2.13';
             if (model) model.textContent = status.model || 'kimi-k2.5-cloud';
+            if (dot) {
+                dot.style.background = status.running ? 'var(--accent-green)' : 'var(--accent-tesla)';
+                dot.style.boxShadow = status.running ? '0 0 8px var(--accent-green)' : '0 0 8px var(--accent-tesla)';
+            }
+            if (localBadge && isLocalMode()) {
+                localBadge.style.display = 'inline-block';
+            }
         }
 
         // Fetch Cron Jobs
