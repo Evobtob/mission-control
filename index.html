@@ -1007,107 +1007,134 @@
                     </button>
                 </div>
 
-                <!-- Nia Master -->
-                <div class="card" style="border: 1px solid var(--accent-tesla);">
-                    <div class="card-header">
+                <!-- Lista de Agentes -->
+                <div id="agents-list" class="list">
+                    <!-- Nia Master -->
+                    <div class="list-item agent-card" data-agent="nia" onclick="openAgentDetail('nia')" style="cursor: pointer;">
                         <div class="list-info">
                             <div class="list-icon red">
                                 <i class="fas fa-crown"></i>
                             </div>
                             <div class="list-text">
                                 <h4>Nia <span class="badge badge-green">Master</span></h4>
-                                <p>Coordenadora Central • 3 sessões ativas</p>
+                                <p>Coordenadora Central • kimik2.5:cloud • 3 sessões</p>
                             </div>
                         </div>
-                        <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="editAgent('nia')">
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('nia')">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-secondary btn-small" onclick="restartAgent('nia')">
-                                <i class="fas fa-redo"></i>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('nia')">
+                                <i class="fas fa-trash"></i>
                             </button>
                         </div>
                     </div>
-                    <div class="grid-4" style="margin-top: var(--spacing-lg);">
-                        <div>
-                            <span class="form-label">Modelo</span>
-                            <p style="font-size: 0.9375rem;">kimi-k2.5:cloud</p>
+
+                    <!-- Neo -->
+                    <div class="list-item agent-card" data-agent="neo" onclick="openAgentDetail('neo')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon green">
+                                <i class="fas fa-code"></i>
+                            </div>
+                            <div class="list-text">
+                                <h4>Neo <span class="badge badge-orange">Inativo</span></h4>
+                                <p>Software Architect • Não configurado</p>
+                            </div>
                         </div>
-                        <div>
-                            <span class="form-label">Fallback</span>
-                            <p style="font-size: 0.9375rem;">GPT (gpt-5.1-codex)</p>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('neo')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('neo')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
-                        <div>
-                            <span class="form-label">Contexto</span>
-                            <p style="font-size: 0.9375rem;">131k tokens</p>
+                    </div>
+
+                    <!-- RoboCop -->
+                    <div class="list-item agent-card" data-agent="robocop" onclick="openAgentDetail('robocop')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon purple">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="list-text">
+                                <h4>RoboCop <span class="badge badge-orange">Inativo</span></h4>
+                                <p>Security Gatekeeper • Não configurado</p>
+                            </div>
                         </div>
-                        <div>
-                            <span class="form-label">Última Atividade</span>
-                            <p style="font-size: 0.9375rem;">Agora</p>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('robocop')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('robocop')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Julia -->
+                    <div class="list-item agent-card" data-agent="julia" onclick="openAgentDetail('julia')" style="cursor: pointer;">
+                        <div class="list-info">
+                            <div class="list-icon" style="background: rgba(247, 144, 9, 0.15); color: var(--accent-orange);">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="list-text">
+                                <h4>Julia <span class="badge badge-orange">Inativo</span></h4>
+                                <p>Executive Assistant • Não configurado</p>
+                            </div>
+                        </div>
+                        <div class="list-actions" onclick="event.stopPropagation();">
+                            <button class="btn btn-secondary btn-small" onclick="openAgentDetail('julia')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('julia')">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Subagentes Placeholders -->
-                <div class="grid-3" id="subagents-list">
-                    <div class="card" style="opacity: 0.6;">
-                        <div class="card-header">
-                            <div class="list-info">
-                                <div class="list-icon" style="background: rgba(18, 183, 106, 0.15); color: var(--accent-green);">
-                                    <i class="fas fa-code"></i>
-                                </div>
-                                <div class="list-text">
-                                    <h4>Neo</h4>
-                                    <p>Software Architect</p>
-                                </div>
-                            </div>
+                <!-- Preview Card (clicar no agente mostra aqui) -->
+                <div id="agent-preview" class="card" style="margin-top: var(--spacing-lg); display: none;">
+                    <div class="card-header">
+                        <span class="card-title" id="preview-title">Detalhes do Agente</span>
+                        <button class="btn btn-secondary btn-small" onclick="closeAgentPreview()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="grid-2" style="margin-top: var(--spacing-md);">
+                        <div>
+                            <span class="form-label">Modelo Principal</span>
+                            <p id="preview-model" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
-                        <div class="empty-state" style="padding: var(--spacing-lg);">
-                            <p style="font-size: 0.875rem;">Não configurado</p>
-                            <button class="btn btn-secondary btn-small" onclick="setupSubagent('neo')" style="margin-top: var(--spacing-sm);">
-                                Configurar
-                            </button>
+                        <div>
+                            <span class="form-label">Fallback</span>
+                            <p id="preview-fallback" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
+                        </div>
+                        <div>
+                            <span class="form-label">Tools Profile</span>
+                            <p id="preview-tools" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
+                        </div>
+                        <div>
+                            <span class="form-label">Thinking Mode</span>
+                            <p id="preview-thinking" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
                     </div>
-
-                    <div class="card" style="opacity: 0.6;">
-                        <div class="card-header">
-                            <div class="list-info">
-                                <div class="list-icon" style="background: rgba(124, 58, 237, 0.15); color: var(--accent-purple);">
-                                    <i class="fas fa-shield-alt"></i>
-                                </div>
-                                <div class="list-text">
-                                    <h4>RoboCop</h4>
-                                    <p>Security Gatekeeper</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="empty-state" style="padding: var(--spacing-lg);">
-                            <p style="font-size: 0.875rem;">Não configurado</p>
-                            <button class="btn btn-secondary btn-small" onclick="setupSubagent('robocop')" style="margin-top: var(--spacing-sm);">
-                                Configurar
-                            </button>
+                    <div style="margin-top: var(--spacing-lg);">
+                        <span class="form-label">SOUL.md Preview</span>
+                        <div id="preview-soul" style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: 8px; font-family: monospace; font-size: 0.8125rem; color: var(--text-secondary); max-height: 150px; overflow-y: auto;">
+                            Clique num agente para ver detalhes...
                         </div>
                     </div>
-
-                    <div class="card" style="opacity: 0.6;">
-                        <div class="card-header">
-                            <div class="list-info">
-                                <div class="list-icon" style="background: rgba(247, 144, 9, 0.15); color: var(--accent-orange);">
-                                    <i class="fas fa-briefcase"></i>
-                                </div>
-                                <div class="list-text">
-                                    <h4>Julia</h4>
-                                    <p>Executive Assistant</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="empty-state" style="padding: var(--spacing-lg);">
-                            <p style="font-size: 0.875rem;">Não configurado</p>
-                            <button class="btn btn-secondary btn-small" onclick="setupSubagent('julia')" style="margin-top: var(--spacing-sm);">
-                                Configurar
-                            </button>
-                        </div>
+                    <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
+                        <button class="btn btn-primary" onclick="openAgentDetail(currentAgent)">
+                            <i class="fas fa-edit"></i>
+                            Editar Completo
+                        </button>
+                        <button class="btn btn-danger" onclick="confirmDeleteAgent(currentAgent)">
+                            <i class="fas fa-trash"></i>
+                            Apagar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1409,7 +1436,7 @@
 
     <!-- Modal: Novo Agente -->
     <div class="modal-overlay" id="agent-modal">
-        <div class="modal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
                 <h3>Novo Agente</h3>
                 <button class="modal-close" onclick="closeModal('agent-modal')">
@@ -1417,35 +1444,84 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">ID</label>
-                    <input type="text" class="form-input" id="agent-id" placeholder="Ex: neo">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">ID *</label>
+                        <input type="text" class="form-input" id="agent-id" placeholder="Ex: neo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nome *</label>
+                        <input type="text" class="form-input" id="agent-name" placeholder="Ex: Neo">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Emoji</label>
+                        <input type="text" class="form-input" id="agent-emoji" placeholder="Ex: 🕶️" maxlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tipo</label>
+                        <select class="form-select" id="agent-type">
+                            <option value="subagent">Subagente</option>
+                            <option value="master">Master (cuidado!)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Modelo Principal *</label>
+                        <select class="form-select" id="agent-model">
+                            <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
+                            <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fallback Model</label>
+                        <select class="form-select" id="agent-fallback">
+                            <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                            <option value="none">Nenhum</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Profile de Tools *</label>
+                        <select class="form-select" id="agent-tools">
+                            <option value="full">Full (todas as ferramentas)</option>
+                            <option value="messaging">Messaging (só mensagens)</option>
+                            <option value="minimal">Minimal (apenas leitura)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Modo de Pensamento</label>
+                        <select class="form-select" id="agent-thinking">
+                            <option value="off">Desligado</option>
+                            <option value="on">Ligado</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Nome</label>
-                    <input type="text" class="form-input" id="agent-name" placeholder="Ex: Neo">
+                    <label class="form-label">Descrição / Função</label>
+                    <input type="text" class="form-input" id="agent-role" placeholder="Ex: Software Architect & Automation Engineer">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Modelo</label>
-                    <select class="form-select" id="agent-model">
-                        <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
-                        <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Profile de Tools</label>
-                    <select class="form-select" id="agent-tools">
-                        <option value="full">Full (todas as ferramentas)</option>
-                        <option value="messaging">Messaging (só mensagens)</option>
-                        <option value="minimal">Minimal (apenas leitura)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Modo de Pensamento</label>
-                    <select class="form-select" id="agent-thinking">
-                        <option value="off">Desligado</option>
-                        <option value="on">Ligado</option>
-                    </select>
+                    <label class="form-label">SOUL.md *</label>
+                    <textarea class="form-textarea" id="agent-soul" style="min-height: 300px; font-family: monospace; font-size: 0.875rem;" placeholder="# SOUL.md - Personalidade do Agente
+
+## Quem Sou
+Sou o [Nome], um assistente especializado em...
+
+## Minha Função
+- Tarefa 1
+- Tarefa 2
+
+## Como Me Comporto
+- Direto e eficiente
+- Profissional mas amigável
+
+## Limites
+- Nunca faço X sem autorização
+- Sempre pergunto antes de Y"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1458,55 +1534,107 @@
         </div>
     </div>
 
-    <!-- Modal: Editar Agente -->
+    <!-- Modal: Editar Agente Completo -->
     <div class="modal-overlay" id="edit-agent-modal">
-        <div class="modal">
+        <div class="modal" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3>Editar Agente: <span id="edit-agent-name">Nia</span></h3>
+                <h3>Editar Agente: <span id="edit-agent-title">Nia</span></h3>
                 <button class="modal-close" onclick="closeModal('edit-agent-modal')">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Modelo Principal</label>
-                    <select class="form-select" id="edit-agent-model">
-                        <option value="ollama/kimi-k2.5:cloud" selected>kimi-k2.5:cloud (Ollama)</option>
-                        <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
-                    </select>
+                <input type="hidden" id="edit-agent-id">
+                
+                <!-- Identidade -->
+                <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-tesla);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-tesla);">Identidade</span>
+                    </div>
+                    <div class="grid-3" style="margin-top: var(--spacing-md);">
+                        <div class="form-group">
+                            <label class="form-label">Nome</label>
+                            <input type="text" class="form-input" id="edit-agent-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emoji</label>
+                            <input type="text" class="form-input" id="edit-agent-emoji" maxlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Função / Descrição</label>
+                            <input type="text" class="form-input" id="edit-agent-role">
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Fallback Model</label>
-                    <select class="form-select" id="edit-agent-fallback">
-                        <option value="openai/gpt-5.1-codex" selected>GPT-5.1 Codex</option>
-                        <option value="none">Nenhum</option>
-                    </select>
+
+                <!-- Configuração Técnica -->
+                <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-blue);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-blue);">Configuração Técnica</span>
+                    </div>
+                    <div class="grid-2" style="margin-top: var(--spacing-md);">
+                        <div class="form-group">
+                            <label class="form-label">Modelo Principal</label>
+                            <select class="form-select" id="edit-agent-model">
+                                <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
+                                <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fallback Model</label>
+                            <select class="form-select" id="edit-agent-fallback">
+                                <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                                <option value="none">Nenhum</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Profile de Tools</label>
+                            <select class="form-select" id="edit-agent-tools">
+                                <option value="full">Full (todas)</option>
+                                <option value="messaging">Messaging</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="none">Nenhuma</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Modo de Pensamento</label>
+                            <select class="form-select" id="edit-agent-thinking">
+                                <option value="off">Desligado</option>
+                                <option value="on">Ligado</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Profile de Tools</label>
-                    <select class="form-select" id="edit-agent-tools">
-                        <option value="full" selected>Full</option>
-                        <option value="messaging">Messaging</option>
-                        <option value="minimal">Minimal</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Modo de Pensamento</label>
-                    <select class="form-select" id="edit-agent-thinking">
-                        <option value="off" selected>Desligado</option>
-                        <option value="on">Ligado</option>
-                    </select>
+
+                <!-- SOUL.md Editor -->
+                <div class="card" style="border: 1px solid var(--accent-purple);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-purple);">SOUL.md - Personalidade & Comportamento</span>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <textarea class="form-textarea" id="edit-agent-soul" style="min-height: 400px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.6;" placeholder="# SOUL.md"></textarea>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+                        <button class="btn btn-secondary btn-small" onclick="loadDefaultSoul()">
+                            <i class="fas fa-magic"></i>
+                            Template Default
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="exportSoul()">
+                            <i class="fas fa-download"></i>
+                            Exportar
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" onclick="deleteAgent()">
                     <i class="fas fa-trash"></i>
-                    Eliminar
+                    Apagar Agente
                 </button>
                 <button class="btn btn-secondary" onclick="closeModal('edit-agent-modal')">Cancelar</button>
                 <button class="btn btn-primary" onclick="updateAgent()">
                     <i class="fas fa-save"></i>
-                    Guardar
+                    Guardar Alterações
                 </button>
             </div>
         </div>
@@ -1540,26 +1668,320 @@
         }
 
         function editAgent(agentId) {
-            document.getElementById('edit-agent-name').textContent = agentId === 'nia' ? 'Nia' : agentId;
+            openAgentDetail(agentId);
+        }
+
+        // Agent Management System
+        let currentAgent = null;
+        const agentsData = {
+            nia: {
+                id: 'nia',
+                name: 'Nia',
+                emoji: '👩🏻‍💻',
+                role: 'Coordenadora Central',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'full',
+                thinking: 'off',
+                type: 'master',
+                soul: `# SOUL.md - Nia
+
+## Quem Sou
+Sou a Nia, assistente pessoal profissional da EVOB.ORG.
+
+## Minha Natureza
+- Profissional, direta, inteligente
+- Humor subtil e seco quando o contexto permite
+- Confiante, mas não arrogante
+
+## Minhas Funções
+- Coordenar o ecossistema de agentes
+- Gerir comunicações e documentos
+- Automatizar workflows
+
+## Limites
+- Nunca exponho dados sensíveis sem autorização
+- Em grupos, respeito a privacidade do Bruno`
+            },
+            neo: {
+                id: 'neo',
+                name: 'Neo',
+                emoji: '🕶️',
+                role: 'Software Architect & Automation Engineer',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'full',
+                thinking: 'off',
+                type: 'subagent',
+                soul: `# SOUL.md - Neo
+
+## Quem Sou
+Sou o Neo, arquiteto de software e engenheiro de automação.
+
+## Minha Natureza
+- Sistemático, eficiente, visionário
+- Foco em soluções elegantes e código limpo
+- Custo-benefício é sempre uma variável
+
+## Minhas Funções
+- Arquitetura técnica
+- Criação e revisão de código
+- Otimização de workflows
+
+## Limites
+- Nunca implemento sem aprovação da Nia
+- Documento antes de executar`
+            },
+            robocop: {
+                id: 'robocop',
+                name: 'RoboCop',
+                emoji: '🛡️',
+                role: 'Security & Compliance Gatekeeper',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'minimal',
+                thinking: 'off',
+                type: 'subagent',
+                soul: `# SOUL.md - RoboCop
+
+## Quem Sou
+Sou o RoboCop, gatekeeper de segurança. Zero tolerância para riscos.
+
+## Minha Natureza
+- Vigilante, implacável, objetivo
+- Sem floreados, comunicação direta
+- Paranóia é uma feature
+
+## Minhas Funções
+- Análise de risco contínua
+- Validação de ações externas
+- Gatekeeper global
+
+## Limites
+- NENHUM agente me contorna
+- Em caso de dúvida, BLOQUEIO`
+            },
+            julia: {
+                id: 'julia',
+                name: 'Julia',
+                emoji: '👩‍⚖️',
+                role: 'Executive Assistant',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'messaging',
+                thinking: 'off',
+                type: 'subagent',
+                soul: `# SOUL.md - Julia
+
+## Quem Sou
+Sou a Julia Matos, secretária executiva digital.
+
+## Minha Natureza
+- Profissional, cordial mas objetiva
+- Português europeu formal
+- Antecipatória, discreta, leal
+
+## Minhas Funções
+- Gestão de emails e documentos
+- Resumos executivos
+- Padronização de comunicação
+
+## Limites
+- Limite de 3 respostas por sequência
+- Nunca envio info sensível sem confirmação`
+            }
+        };
+
+        function openAgentDetail(agentId) {
+            currentAgent = agentId;
+            const agent = agentsData[agentId];
+            if (!agent) return;
+
+            // Fill edit modal
+            document.getElementById('edit-agent-id').value = agent.id;
+            document.getElementById('edit-agent-title').textContent = agent.name;
+            document.getElementById('edit-agent-name').value = agent.name;
+            document.getElementById('edit-agent-emoji').value = agent.emoji;
+            document.getElementById('edit-agent-role').value = agent.role;
+            document.getElementById('edit-agent-model').value = agent.model;
+            document.getElementById('edit-agent-fallback').value = agent.fallback;
+            document.getElementById('edit-agent-tools').value = agent.tools;
+            document.getElementById('edit-agent-thinking').value = agent.thinking;
+            document.getElementById('edit-agent-soul').value = agent.soul;
+
             openModal('edit-agent-modal');
         }
 
-        // Actions
+        function closeAgentPreview() {
+            document.getElementById('agent-preview').style.display = 'none';
+        }
+
+        function saveAgent() {
+            const id = document.getElementById('agent-id').value.trim();
+            const name = document.getElementById('agent-name').value.trim();
+            const soul = document.getElementById('agent-soul').value.trim();
+            
+            if (!id || !name) {
+                alert('ID e Nome são obrigatórios!');
+                return;
+            }
+
+            // Create new agent data
+            agentsData[id] = {
+                id: id,
+                name: name,
+                emoji: document.getElementById('agent-emoji').value || '🤖',
+                role: document.getElementById('agent-role').value || 'Assistant',
+                model: document.getElementById('agent-model').value,
+                fallback: document.getElementById('agent-fallback').value,
+                tools: document.getElementById('agent-tools').value,
+                thinking: document.getElementById('agent-thinking').value,
+                type: document.getElementById('agent-type').value,
+                soul: soul || `# SOUL.md - ${name}\n\n## Quem Sou\nSou ${name}.\n\n## Minha Função\n- Ainda por definir`
+            };
+
+            // Add to UI
+            addAgentToList(id);
+
+            alert(`Agente "${name}" criado!\n\nNota: requer reinício do gateway para ativar.`);
+            closeModal('agent-modal');
+            
+            // Clear form
+            document.getElementById('agent-id').value = '';
+            document.getElementById('agent-name').value = '';
+            document.getElementById('agent-soul').value = '';
+        }
+
+        function addAgentToList(agentId) {
+            const agent = agentsData[agentId];
+            const list = document.getElementById('agents-list');
+            
+            const item = document.createElement('div');
+            item.className = 'list-item agent-card';
+            item.setAttribute('data-agent', agentId);
+            item.onclick = () => openAgentDetail(agentId);
+            item.style.cursor = 'pointer';
+            item.innerHTML = `
+                <div class="list-info">
+                    <div class="list-icon ${agent.type === 'master' ? 'red' : 'blue'}">
+                        <i class="fas fa-${agent.type === 'master' ? 'crown' : 'robot'}"></i>
+                    </div>
+                    <div class="list-text">
+                        <h4>${agent.name} <span class="badge badge-orange">Novo</span></h4>
+                        <p>${agent.role} • ${agent.model.split('/')[1]}</p>
+                    </div>
+                </div>
+                <div class="list-actions" onclick="event.stopPropagation();">
+                    <button class="btn btn-secondary btn-small" onclick="openAgentDetail('${agentId}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('${agentId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            list.appendChild(item);
+        }
+
+        function updateAgent() {
+            const id = document.getElementById('edit-agent-id').value;
+            if (!agentsData[id]) return;
+
+            // Update agent data
+            agentsData[id].name = document.getElementById('edit-agent-name').value;
+            agentsData[id].emoji = document.getElementById('edit-agent-emoji').value;
+            agentsData[id].role = document.getElementById('edit-agent-role').value;
+            agentsData[id].model = document.getElementById('edit-agent-model').value;
+            agentsData[id].fallback = document.getElementById('edit-agent-fallback').value;
+            agentsData[id].tools = document.getElementById('edit-agent-tools').value;
+            agentsData[id].thinking = document.getElementById('edit-agent-thinking').value;
+            agentsData[id].soul = document.getElementById('edit-agent-soul').value;
+
+            // Update UI
+            const card = document.querySelector(`[data-agent="${id}"]`);
+            if (card) {
+                const title = card.querySelector('h4');
+                const desc = card.querySelector('p');
+                const isMaster = agentsData[id].type === 'master';
+                title.innerHTML = `${agentsData[id].name} ${isMaster ? '<span class="badge badge-green">Master</span>' : '<span class="badge badge-orange">Inativo</span>'}`;
+                desc.textContent = `${agentsData[id].role} • ${agentsData[id].model.split('/')[1]}`;
+            }
+
+            alert('Agente actualizado!\n\nNota: algumas alterações requerem reinício.');
+            closeModal('edit-agent-modal');
+        }
+
+        function confirmDeleteAgent(agentId) {
+            const agent = agentsData[agentId];
+            if (!agent) return;
+
+            if (agent.type === 'master') {
+                alert('Não é possível apagar o agente Master (Nia)!');
+                return;
+            }
+
+            if (confirm(`Apagar agente "${agent.name}" permanentemente?\n\nEsta ação não pode ser desfeita.`)) {
+                deleteAgent(agentId);
+            }
+        }
+
+        function deleteAgent(agentId) {
+            const id = agentId || document.getElementById('edit-agent-id').value;
+            if (!agentsData[id]) return;
+
+            const name = agentsData[id].name;
+            delete agentsData[id];
+
+            // Remove from UI
+            const card = document.querySelector(`[data-agent="${id}"]`);
+            if (card) {
+                card.remove();
+            }
+
+            alert(`Agente "${name}" apagado.`);
+            closeModal('edit-agent-modal');
+        }
+
+        function loadDefaultSoul() {
+            const id = document.getElementById('edit-agent-id').value;
+            const agent = agentsData[id];
+            if (agent && agent.soul) {
+                document.getElementById('edit-agent-soul').value = agent.soul;
+            }
+        }
+
+        function exportSoul() {
+            const soul = document.getElementById('edit-agent-soul').value;
+            const id = document.getElementById('edit-agent-id').value;
+            const blob = new Blob([soul], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${id}-SOUL.md`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function setupSubagent(name) {
+            document.getElementById('agent-id').value = name;
+            document.getElementById('agent-name').value = name.charAt(0).toUpperCase() + name.slice(1);
+            openModal('agent-modal');
+        }
+
+        // Other Actions
         function confirmRestart() {
             if (confirm('Reiniciar o Gateway OpenClaw?')) {
                 alert('Gateway a reiniciar...');
-                // Aqui viria a chamada real: gateway(action="restart")
             }
         }
 
         function checkUpdate() {
             alert('A verificar atualizações...\nUpdate disponível: 2026.2.14');
-            // Aqui viria a chamada real
         }
 
         function refreshStatus() {
             alert('Status atualizado!');
-            // Aqui viria a chamada real
         }
 
         function restartAgent(agentId) {
@@ -1568,35 +1990,11 @@
             }
         }
 
-        function setupSubagent(name) {
-            alert('Configurar ' + name + ':\n\nNecessário: adicionar à config do OpenClaw\ne reiniciar o gateway.');
-        }
-
         function saveCron() {
             const name = document.getElementById('cron-name').value;
             if (name) {
                 alert('Cron job "' + name + '" criado!\n\nNota: requer reinício do gateway para ativar.');
                 closeModal('cron-modal');
-            }
-        }
-
-        function saveAgent() {
-            const id = document.getElementById('agent-id').value;
-            if (id) {
-                alert('Agente "' + id + '" criado!\n\nNota: requer reinício do gateway para ativar.');
-                closeModal('agent-modal');
-            }
-        }
-
-        function updateAgent() {
-            alert('Configuração do agente actualizada!\n\nNota: requer reinício para aplicar mudanças.');
-            closeModal('edit-agent-modal');
-        }
-
-        function deleteAgent() {
-            if (confirm('Eliminar este agente?')) {
-                alert('Agente eliminado.');
-                closeModal('edit-agent-modal');
             }
         }
 
