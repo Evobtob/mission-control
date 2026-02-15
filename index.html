@@ -2689,6 +2689,24 @@ SOLUÇÃO - Modo Local com Bridge:
                 }
             });
         }, 1000);
+
+        // Setup navigation click handlers programmatically (fallback for inline onclick)
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.nav-item').forEach(function(item) {
+                item.addEventListener('click', function(e) {
+                    const onclick = this.getAttribute('onclick');
+                    if (onclick && onclick.includes('showPage')) {
+                        // Extract pageId from onclick
+                        const match = onclick.match(/showPage\('([^']+)'/);
+                        if (match) {
+                            e.preventDefault();
+                            showPage(match[1], this);
+                        }
+                    }
+                });
+            });
+            console.log('Navigation handlers attached');
+        });
     </script>
 </body>
 </html>
