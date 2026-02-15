@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>EVOB Mission Control — Desktop</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+    
+    <style>
+        :root {
+            /* Tesla-inspired palette */
+            --bg-primary: #000000;
+            --bg-secondary: #121212;
+            --bg-card: #1a1a1a;
+            --bg-card-hover: #2a2a2a;
+            --bg-elevated: #2d2d2d;
+            
+            /* Tesla Red + accents */
+            --accent-tesla: #E82127;
+            --accent-tesla-light: #FF4D4D;
+            --accent-blue: #3B9EFF;
+            --accent-green: #12B76A;
+            --accent-orange: #F79009;
+            --accent-purple: #7C3AED;
+            
+            /* Text colors */
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-tertiary: rgba(255, 255, 255, 0.5);
+            --text-muted: rgba(255, 255, 255, 0.35);
+            
+            /* Spacing */
+            --spacing-xs: 8px;
+            --spacing-sm: 12px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 50%;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
+            --shadow-red: 0 4px 20px rgba(232, 33, 39, 0.3);
+            
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Tesla-style Desktop Layout */
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--bg-card-hover);
+            display: flex;
+            flex-direction: column;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-2xl);
+            padding-bottom: var(--spacing-lg);
+            border-bottom: 1px solid var(--bg-card-hover);
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-tesla) 0%, var(--accent-tesla-light) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow-red);
+        }
+
+        .brand-text h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nav-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .nav-title {
+            font-size: 0.6875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            padding-left: var(--spacing-sm);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: inset 0 0 0 1px var(--bg-card-hover);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--accent-tesla);
+        }
+
+        .nav-item.active i {
+            color: var(--accent-tesla);
+        }
+
+        /* Main Content */
+        .main {
+            flex: 1;
+            margin-left: 280px;
+            padding: var(--spacing-xl) var(--spacing-2xl);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .header-title h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: inherit;
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .btn-primary {
+            background: var(--accent-tesla);
+            color: white;
+            box-shadow: var(--shadow-red);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-tesla-light);
+            transform: translateY(-1px);
+        }
+
+        /* Dashboard Grid - Tesla Style */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: var(--spacing-lg);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .card-icon.red { background: rgba(232, 33, 39, 0.15); color: var(--accent-tesla); }
+        .card-icon.blue { background: rgba(59, 158, 255, 0.15); color: var(--accent-blue); }
+        .card-icon.green { background: rgba(18, 183, 106, 0.15); color: var(--accent-green); }
+        .card-icon.orange { background: rgba(247, 144, 9, 0.15); color: var(--accent-orange); }
+        .card-icon.purple { background: rgba(124, 58, 237, 0.15); color: var(--accent-purple); }
+
+        /* Metric Cards */
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .metric-value.large {
+            font-size: 3.5rem;
+        }
+
+        .metric-label {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        .metric-change {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: var(--spacing-sm);
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .metric-change.positive {
+            color: var(--accent-green);
+            background: rgba(18, 183, 106, 0.1);
+        }
+
+        .metric-change.negative {
+            color: var(--accent-tesla);
+            background: rgba(232, 33, 39, 0.1);
+        }
+
+        /* Grid Positions */
+        .col-3 { grid-column: span 3; }
+        .col-4 { grid-column: span 4; }
+        .col-6 { grid-column: span 6; }
+        .col-8 { grid-column: span 8; }
+        .col-12 { grid-column: span 12; }
+
+        /* Chart Container */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: var(--spacing-md);
+        }
+
+        .chart-container.small {
+            height: 200px;
+        }
+
+        /* Breakdown List */
+        .breakdown {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .breakdown-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+        }
+
+        .breakdown-info {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .breakdown-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: var(--radius-full);
+        }
+
+        .breakdown-label {
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .breakdown-value {
+            font-weight: 700;
+            font-size: 1.125rem;
+        }
+
+        /* Tips Cards */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+        }
+
+        .tip-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .tip-card:hover {
+            border-color: var(--accent-tesla);
+            transform: translateY(-2px);
+        }
+
+        .tip-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .tip-card h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .tip-card p {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .col-3 { grid-column: span 6; }
+            .col-4 { grid-column: span 6; }
+            .tips-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { margin-left: 0; padding: var(--spacing-md); }
+            .col-3, .col-4, .col-6, .col-8 { grid-column: span 12; }
+            .tips-grid { grid-template-columns: 1fr; }
+            .header { flex-direction: column; align-items: flex-start; gap: var(--spacing-md); }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-card-hover);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-tesla);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>EVOB</h1>
+                    <p>Mission Control</p>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Principal</div>
+                <div class="nav-item active">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Projetos</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Equipa</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-wallet"></i>
+                    <span>Financeiro</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Análise</div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Relatórios</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Insights</span>
+                </div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-title">Sistema</div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configurações</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Segurança</span>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main">
+            <header class="header">
+                <div class="header-title">
+                    <h2>Dashboard</h2>
+                    <p>Visão geral do desempenho da EVOB • Ano 2026</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-secondary">
+                        <i class="fas fa-download"></i>
+                        Exportar
+                    </button>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        Novo Projeto
+                    </button>
+                </div>
+            </header>
+
+            <div class="dashboard">
+                <!-- KPI Cards Row -->
+                <div class="card col-3">
+                    <div class="card-header">
+                        <span class="card-title">Projetos Ativos</span>
+                        <div class="card-icon red">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">12</div>
+                    <div class="metric-label">3 em desenvolvimento</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +25% vs 2025
+                    </div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="card-header">
+                        <span class="card-title">Receita Total</span>
+                        <div class="card-icon green">
+                            <i class="fas fa-euro-sign"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">€485K</div>
+                    <div class="metric-label">Facturado este ano</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +42% YoY
+                    </div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="card-header">
+                        <span class="card-title">Equipa</span>
+                        <div class="card-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Membros activos</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-arrow-up"></i>
+                        +2 este mês
+                    </div>
+                </div>
+
+                <div class="card col-3">
+                    <div class="card-header">
+                        <span class="card-title">Eficiência</span>
+                        <div class="card-icon purple">
+                            <i class="fas fa-tachometer-alt"></i>
+                        </div>
+                    </div>
+                    <div class="metric-value">94%</div>
+                    <div class="metric-label">Meta atingida</div>
+                    <div class="metric-change positive">
+                        <i class="fas fa-check"></i>
+                        Acima do target
+                    </div>
+                </div>
+
+                <!-- Large Chart -->
+                <div class="card col-8">
+                    <div class="card-header">
+                        <span class="card-title">Performance Mensal</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="mainChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Breakdown -->
+                <div class="card col-4">
+                    <div class="card-header">
+                        <span class="card-title">Distribuição de Projetos</span>
+                    </div>
+                    <div class="chart-container small">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="breakdown">
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <div class="breakdown-dot" style="background: var(--accent-tesla);"></div>
+                                <span class="breakdown-label">EVOB Energy</span>
+                            </div>
+                            <span class="breakdown-value" style="color: var(--accent-tesla);">45%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <div class="breakdown-dot" style="background: var(--accent-blue);"></div>
+                                <span class="breakdown-label">Consultoria</span>
+                            </div>
+                            <span class="breakdown-value" style="color: var(--accent-blue);">30%</span>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-info">
+                                <div class="breakdown-dot" style="background: var(--accent-green);"></div>
+                                <span class="breakdown-label">Software</span>
+                            </div>
+                            <span class="breakdown-value" style="color: var(--accent-green);">25%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Tips -->
+                <div class="card col-12">
+                    <div class="card-header">
+                        <span class="card-title">Acções Recomendadas</span>
+                    </div>
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <div class="tip-icon red">
+                                <i class="fas fa-coins"></i>
+                            </div>
+                            <h4>Otimizar Custos</h4>
+                            <p>Rever fornecedores infraestrutura. Potencial poupança: €2.4K/mês</p>
+                        </div>
+                        <div class="tip-card">
+                            <div class="tip-icon green">
+                                <i class="fas fa-leaf"></i>
+                            </div>
+                            <h4>Operação Sustentável</h4>
+                            <p>Implementar política de carbono neutro para projetos cloud</p>
+                        </div>
+                        <div class="tip-card">
+                            <div class="tip-icon blue">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <h4>Pronto a Escalar</h4>
+                            <p>Recrutar 2 desenvolvedores senior para Q2. Budget aprovado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Chart.js configuration - Tesla style
+        Chart.defaults.color = 'rgba(255, 255, 255, 0.5)';
+        Chart.defaults.font.family = 'Inter';
+        
+        // Main Bar Chart
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Receita (K€)',
+                    data: [28, 32, 35, 38, 42, 45, 48, 52, 55, 58, 62, 68],
+                    backgroundColor: '#E82127',
+                    borderRadius: 8,
+                    barPercentage: 0.6,
+                }, {
+                    label: 'Custos (K€)',
+                    data: [18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40],
+                    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                    borderRadius: 8,
+                    barPercentage: 0.6,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        align: 'end',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 12, weight: '500' }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(255, 255, 255, 0.05)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 11 },
+                            callback: function(value) {
+                                return '€' + value + 'K';
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        ticks: {
+                            font: { size: 11 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Pie Chart
+        const pieCtx = document.getElementById('pieChart').getContext('2d');
+        new Chart(pieCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['EVOB Energy', 'Consultoria', 'Software'],
+                datasets: [{
+                    data: [45, 30, 25],
+                    backgroundColor: [
+                        '#E82127',
+                        '#3B9EFF',
+                        '#12B76A'
+                    ],
+                    borderWidth: 0,
+                    cutout: '70%'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

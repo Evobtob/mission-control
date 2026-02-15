@@ -8,10 +8,11 @@ Sistema de controlo operacional para OpenClaw com versionamento robusto.
 
 | Versão | URL | Descrição | Estado |
 |--------|-----|-----------|--------|
-| **Latest** | https://evobtob.github.io/mission-control/ | Sempre a versão mais recente | ✅ Ativo |
-| **v1.2** | https://evobtob.github.io/mission-control/v1.2/ (n/a - é a latest) | Versioning system + selector | ✅ Ativo |
-| **v1.1** | https://evobtob.github.io/mission-control/v1.1/ | Tasks + Cron Jobs tabs | ✅ Estável |
-| **v1.0** | https://evobtob.github.io/mission-control/v1.0/ | English + Agent Management | ✅ Estável |
+| **Latest (v2.1)** | https://evobtob.github.io/mission-control/ | Multi-page — cada secção tem página dedicada | ✅ Ativo |
+| **v2.0** | https://evobtob.github.io/mission-control/v2.0/ | Multi-page base | ✅ Estável |
+| **v1.2** | https://evobtob.github.io/mission-control/v1.2/ | SPA com version selector | ✅ Estável |
+| **v1.1** | https://evobtob.github.io/mission-control/v1.1/ | SPA com Tasks + Cron | ✅ Estável |
+| **v1.0** | https://evobtob.github.io/mission-control/v1.0/ | SPA English + Agents | ✅ Estável |
 
 ---
 
@@ -30,11 +31,28 @@ Sistema de controlo operacional para OpenClaw com versionamento robusto.
 
 ```
 mission-control/
-├── index.html          # SEMPRE a versão mais recente (v1.2+)
-├── v1.0/
-│   └── index.html      # V1.0 — congelada, nunca muda
-├── v1.1/
-│   └── index.html      # V1.1 — congelada, nunca muda
+├── index.html          # SEMPRE a versão mais recente (v2.1+)
+├── agents.html         # Página dedicada Agents (v2.x)
+├── system.html         # Página dedicada System (v2.x)
+├── connections.html    # Página dedicada Connections (v2.x)
+├── security.html       # Página dedicada Security (v2.x)
+├── tasks.html          # Página dedicada Tasks (v2.x)
+├── cron.html           # Página dedicada Cron Jobs (v2.x)
+├── v2.0/               # V2.0 congelada (multi-page base)
+│   ├── index.html
+│   ├── agents.html
+│   ├── system.html
+│   ├── connections.html
+│   ├── security.html
+│   ├── tasks.html
+│   └── cron.html
+├── v1.2/               # V1.2 congelada (SPA com selector)
+│   └── index.html
+├── v1.1/               # V1.1 congelada (SPA)
+│   └── index.html
+├── v1.0/               # V1.0 congelada (SPA)
+│   └── index.html
+├── local/              # Servidor Python local + Bridge
 ├── versions.json       # Manifesto de versões
 └── SIMULATION_REPORT.md
 ```
@@ -42,9 +60,26 @@ mission-control/
 ### Tags Git:
 
 ```
-v1.0 → 17eea3e (English + Agents)
-v1.1 → 9f911ab (Tasks + Cron)
-v1.2 → d602bfa (Versioning system)
+v2.1 → d8715b5 (Multi-page com modals + JS)
+v2.0 → 7f1224a (Multi-page base)
+v1.2 → d602bfa (SPA Versioning system)
+v1.1 → 9f911ab (SPA Tasks + Cron)
+v1.0 → 17eea3e (SPA English + Agents)
+```
+
+### Rollback para V2.x:
+
+```bash
+# Para rollback para v2.0:
+git checkout v2.0
+cp v2.0/*.html .
+# Commit e push
+
+# Para rollback para SPA (v1.2):
+git checkout v1.2
+cp v1.2/index.html .
+rm agents.html system.html connections.html security.html tasks.html cron.html
+# Commit e push
 ```
 
 ---
