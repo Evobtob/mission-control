@@ -576,14 +576,14 @@
                 <div class="brand-icon"><i class="fas fa-bolt"></i></div>
                 <div class="brand-text">
                     <h1>NIA OS</h1>
-                    <p>Mission Control <span id="version-badge" style="color: var(--accent-tesla); font-weight: 600;">v1.1</span></p>
+                    <p>Mission Control <span style="color: var(--accent-tesla); font-weight: 600;">v1.1</span></p>
                 </div>
             </div>
             <div style="margin-bottom: var(--spacing-lg); padding-bottom: var(--spacing-md); border-bottom: 1px solid var(--bg-card-hover);">
-                <select id="version-selector" onchange="switchVersion(this.value)" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.8125rem; cursor: pointer;">
-                    <option value="./">Latest (v1.1)</option>
-                    <option value="./v1.1/">v1.1 - Tasks + Cron</option>
-                    <option value="./v1.0/">v1.0 - English + Agents</option>
+                <select onchange="window.location.href=this.value" style="width: 100%; padding: 8px; background: var(--bg-card); border: 1px solid var(--bg-card-hover); border-radius: var(--radius-sm); color: var(--text-primary); font-size: 0.8125rem; cursor: pointer;">
+                    <option value="../">Latest (v1.1)</option>
+                    <option value="./" selected>v1.1 - Tasks + Cron</option>
+                    <option value="../v1.0/">v1.0 - English + Agents</option>
                 </select>
             </div>
 
@@ -2203,34 +2203,9 @@ I am Julia Matos, digital executive secretary.
             alert('Cron jobs refreshed!');
         }
 
-        // ==================== VERSION MANAGEMENT ====================
-        function switchVersion(version) {
-            if (version && version !== window.location.pathname) {
-                window.location.href = version;
-            }
-        }
-
-        function detectVersion() {
-            const path = window.location.pathname;
-            const selector = document.getElementById('version-selector');
-            const badge = document.getElementById('version-badge');
-
-            if (path.includes('/v1.0/')) {
-                badge.textContent = 'v1.0';
-                selector.value = './v1.0/';
-            } else if (path.includes('/v1.1/')) {
-                badge.textContent = 'v1.1';
-                selector.value = './v1.1/';
-            } else {
-                badge.textContent = 'v1.1 (latest)';
-                selector.value = './';
-            }
-        }
-
         // Initialize
         renderTasks();
         renderCronJobs();
-        detectVersion();
     </script>
 </body>
 </html>
