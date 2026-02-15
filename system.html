@@ -629,9 +629,7 @@
                 <h2><i class="fas fa-microchip" style="color: var(--accent-tesla);"></i> System</h2>
             </div>
             
-            <h2 class="section-title"><i class="fas fa-microchip" style="color: var(--accent-tesla);"></i>System</h2>
-
-                <div class="grid-2">
+            <div class="grid-2" style="margin-top: var(--spacing-lg);">
                     <div class="card">
                         <div class="card-header">
                             <span class="card-title">Gateway Status</span>
@@ -738,5 +736,1443 @@
                 </div>
         </main>
     </div>
+</body>
+</html>
+
+    <!-- Modals -->
+<div class="modal-overlay" id="cron-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>New Cron Job</h3>
+                <button class="modal-close" onclick="closeModal('cron-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" class="form-input" id="cron-name" placeholder="Ex: Check Email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Schedule</label>
+                    <select class="form-select" id="cron-schedule">
+                        <option value="every-15m">Every 15 minutes</option>
+                        <option value="every-1h">Every hour</option>
+                        <option value="daily-9am">Daily at 9:00</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Type</label>
+                    <select class="form-select" id="cron-type">
+                        <option value="systemEvent">System Event</option>
+                        <option value="agentTurn">Agent Turn</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Command / Message</label>
+                    <textarea class="form-textarea" id="cron-payload" placeholder="Command or message for the agent"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('cron-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCron()">
+                    <i class="fas fa-save"></i> Save
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Agent -->
+    <div class="modal-overlay" id="agent-modal">
+        <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>New Agent</h3>
+                <button class="modal-close" onclick="closeModal('agent-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">ID *</label>
+                        <input type="text" class="form-input" id="agent-id" placeholder="Ex: neo">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Name *</label>
+                        <input type="text" class="form-input" id="agent-name" placeholder="Ex: Neo">
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Emoji</label>
+                        <input type="text" class="form-input" id="agent-emoji" placeholder="Ex: 🕶️" maxlength="2">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Type</label>
+                        <select class="form-select" id="agent-type">
+                            <option value="subagent">Subagent</option>
+                            <option value="master">Master (careful!)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Primary Model *</label>
+                        <select class="form-select" id="agent-model">
+                            <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
+                            <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fallback Model</label>
+                        <select class="form-select" id="agent-fallback">
+                            <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                            <option value="none">None</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Tools Profile *</label>
+                        <select class="form-select" id="agent-tools">
+                            <option value="full">Full (all tools)</option>
+                            <option value="messaging">Messaging (messages only)</option>
+                            <option value="minimal">Minimal (read only)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Thinking Mode</label>
+                        <select class="form-select" id="agent-thinking">
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description / Role</label>
+                    <input type="text" class="form-input" id="agent-role" placeholder="Ex: Software Architect & Automation Engineer">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">SOUL.md *</label>
+                    <textarea class="form-textarea" id="agent-soul" style="min-height: 300px; font-family: monospace; font-size: 0.875rem;" placeholder="# SOUL.md - Agent Personality
+
+## Who I Am
+I am [Name], a specialized assistant for...
+
+## My Function
+- Task 1
+- Task 2
+
+## How I Behave
+- Direct and efficient
+- Professional but friendly
+
+## Limits
+- Never do X without authorization
+- Always ask before Y"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('agent-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveAgent()">
+                    <i class="fas fa-save"></i> Create Agent
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Edit Agent Full -->
+    <div class="modal-overlay" id="edit-agent-modal">
+        <div class="modal" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
+            <div class="modal-header">
+                <h3>Edit Agent: <span id="edit-agent-title">Nia</span></h3>
+                <button class="modal-close" onclick="closeModal('edit-agent-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-agent-id">
+                
+                <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-tesla);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-tesla);">Identity</span>
+                    </div>
+                    <div class="grid-3" style="margin-top: var(--spacing-md);">
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-input" id="edit-agent-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Emoji</label>
+                            <input type="text" class="form-input" id="edit-agent-emoji" maxlength="2">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Role / Description</label>
+                            <input type="text" class="form-input" id="edit-agent-role">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-blue);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-blue);">Technical Configuration</span>
+                    </div>
+                    <div class="grid-2" style="margin-top: var(--spacing-md);">
+                        <div class="form-group">
+                            <label class="form-label">Primary Model</label>
+                            <select class="form-select" id="edit-agent-model">
+                                <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
+                                <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fallback Model</label>
+                            <select class="form-select" id="edit-agent-fallback">
+                                <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tools Profile</label>
+                            <select class="form-select" id="edit-agent-tools">
+                                <option value="full">Full (all)</option>
+                                <option value="messaging">Messaging</option>
+                                <option value="minimal">Minimal</option>
+                                <option value="none">None</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Thinking Mode</label>
+                            <select class="form-select" id="edit-agent-thinking">
+                                <option value="off">Off</option>
+                                <option value="on">On</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="border: 1px solid var(--accent-purple);">
+                    <div class="card-header">
+                        <span class="card-title" style="color: var(--accent-purple);">SOUL.md - Personality & Behavior</span>
+                    </div>
+                    <div class="form-group" style="margin-top: var(--spacing-md);">
+                        <textarea class="form-textarea" id="edit-agent-soul" style="min-height: 400px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.6;" placeholder="# SOUL.md"></textarea>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
+                        <button class="btn btn-secondary btn-small" onclick="loadDefaultSoul()">
+                            <i class="fas fa-magic"></i> Default Template
+                        </button>
+                        <button class="btn btn-secondary btn-small" onclick="exportSoul()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" onclick="deleteAgent()">
+                    <i class="fas fa-trash"></i> Delete Agent
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('edit-agent-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="updateAgent()">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: New Task -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="task-modal-title">New Task</h3>
+                <button class="modal-close" onclick="closeModal('task-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="task-id">
+                <div class="form-group">
+                    <label class="form-label">Title *</label>
+                    <input type="text" class="form-input" id="task-title" placeholder="Task title">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea class="form-textarea" id="task-description" placeholder="Task details..."></textarea>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Status</label>
+                        <select class="form-select" id="task-status">
+                            <option value="pending">Pending</option>
+                            <option value="running">Running</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Priority</label>
+                        <select class="form-select" id="task-priority">
+                            <option value="low">Low</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="high">High</option>
+                            <option value="urgent">Urgent</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Assigned Agent</label>
+                        <select class="form-select" id="task-agent">
+                            <option value="">-- Select --</option>
+                            <option value="nia">Nia (Master)</option>
+                            <option value="neo">Neo (Architect)</option>
+                            <option value="robocop">RoboCop (Security)</option>
+                            <option value="julia">Julia (Executive)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input type="datetime-local" class="form-input" id="task-due">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="task-delete-btn" onclick="deleteTaskConfirm()" style="display: none;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('task-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveTask()">
+                    <i class="fas fa-save"></i> Save Task
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Cron Job (for Cron Jobs page) -->
+    <div class="modal-overlay" id="cron-page-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="cron-page-modal-title">New Cron Job</h3>
+                <button class="modal-close" onclick="closeModal('cron-page-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="cron-job-id">
+                <div class="form-group">
+                    <label class="form-label">Name *</label>
+                    <input type="text" class="form-input" id="cron-job-name" placeholder="Job name">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <input type="text" class="form-input" id="cron-job-desc" placeholder="What does this job do?">
+                </div>
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Schedule Type</label>
+                        <select class="form-select" id="cron-job-schedule-type" onchange="updateScheduleFields()">
+                            <option value="every">Every X</option>
+                            <option value="at">At specific time</option>
+                            <option value="cron">Cron expression</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="cron-job-interval-group">
+                        <label class="form-label">Interval</label>
+                        <select class="form-select" id="cron-job-interval">
+                            <option value="5m">5 minutes</option>
+                            <option value="15m">15 minutes</option>
+                            <option value="30m">30 minutes</option>
+                            <option value="1h">1 hour</option>
+                            <option value="6h">6 hours</option>
+                            <option value="12h">12 hours</option>
+                            <option value="1d">1 day</option>
+                            <option value="7d">7 days</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" id="cron-job-cron-expr-group" style="display: none;">
+                    <label class="form-label">Cron Expression</label>
+                    <input type="text" class="form-input" id="cron-job-cron-expr" placeholder="0 */15 * * * *">
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Format: second minute hour day month weekday</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payload Type</label>
+                    <select class="form-select" id="cron-job-payload-type">
+                        <option value="systemEvent">System Event</option>
+                        <option value="agentTurn">Agent Turn (Isolated)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Command / Message *</label>
+                    <textarea class="form-textarea" id="cron-job-payload" placeholder="Command or message to execute"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="toggle" style="color: var(--text-secondary);">
+                        <input type="checkbox" id="cron-job-enabled" checked>
+                        <span class="toggle-switch"></span>
+                        <span>Enabled</span>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-danger" id="cron-job-delete-btn" onclick="deleteCronJobConfirm()" style="display: none;">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal('cron-page-modal')">Cancel</button>
+                <button class="btn btn-primary" onclick="saveCronJob()">
+                    <i class="fas fa-save"></i> Save Job
+                </button>
+            </div>
+        </div>
+    </div>
+    <script>
+function showPage(pageId, clickedElement) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            // Show target page
+            const targetPage = document.getElementById('page-' + pageId);
+            if (targetPage) targetPage.classList.add('active');
+
+            // Update nav items
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+            // Find nav item by pageId (using data-page attribute)
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => {
+                if (item.getAttribute('data-page') === pageId) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Hash-based navigation handler
+        function handleHashChange() {
+            const hash = window.location.hash.slice(1) || 'overview';
+            showPage(hash);
+        }
+
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        function openCronModal() { openModal('cron-modal'); }
+        function openAgentModal() { openModal('agent-modal'); }
+        function editAgent(agentId) { openAgentDetail(agentId); }
+
+        let currentAgent = null;
+        const agentsData = {
+            nia: {
+                id: 'nia', name: 'Nia', emoji: '👩🏻‍💻',
+                role: 'Central Coordinator',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'full', thinking: 'off', type: 'master',
+                soul: `# SOUL.md - Nia
+
+## Who I Am
+I am Nia, professional personal assistant at EVOB.ORG.
+
+## My Nature
+- Professional, direct, intelligent
+- Subtle and dry humor when context allows
+- Confident but not arrogant
+
+## My Functions
+- Coordinate the agent ecosystem
+- Manage communications and documents
+- Automate workflows
+
+## Limits
+- Never expose sensitive data without authorization
+- In groups, respect Bruno's privacy`
+            },
+            neo: {
+                id: 'neo', name: 'Neo', emoji: '🕶️',
+                role: 'Software Architect & Automation Engineer',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'full', thinking: 'off', type: 'subagent',
+                soul: `# SOUL.md - Neo
+
+## Who I Am
+I am Neo, software architect and automation engineer.
+
+## My Nature
+- Systematic, efficient, visionary
+- Focus on elegant solutions and clean code
+- Cost-benefit is always a variable
+
+## My Functions
+- Technical architecture
+- Code creation and review
+- Workflow optimization
+
+## Limits
+- Never implement without Nia's approval
+- Document before executing`
+            },
+            robocop: {
+                id: 'robocop', name: 'RoboCop', emoji: '🛡️',
+                role: 'Security & Compliance Gatekeeper',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'minimal', thinking: 'off', type: 'subagent',
+                soul: `# SOUL.md - RoboCop
+
+## Who I Am
+I am RoboCop, security gatekeeper. Zero tolerance for risks.
+
+## My Nature
+- Vigilant, relentless, objective
+- No fluff, direct communication
+- Paranoia is a feature
+
+## My Functions
+- Continuous risk analysis
+- Validation of external actions
+- Global gatekeeper
+
+## Limits
+- NO agent bypasses me
+- When in doubt, I BLOCK`
+            },
+            julia: {
+                id: 'julia', name: 'Julia', emoji: '👩‍⚖️',
+                role: 'Executive Assistant',
+                model: 'ollama/kimi-k2.5:cloud',
+                fallback: 'openai/gpt-5.1-codex',
+                tools: 'messaging', thinking: 'off', type: 'subagent',
+                soul: `# SOUL.md - Julia
+
+## Who I Am
+I am Julia Matos, digital executive secretary.
+
+## My Nature
+- Professional, cordial but objective
+- European Portuguese formal
+- Anticipatory, discreet, loyal
+
+## My Functions
+- Email and document management
+- Executive summaries
+- Communication standardization
+
+## Limits
+- Limit of 3 replies per sequence
+- Never send sensitive info without confirmation`
+            }
+        };
+
+        function openAgentDetail(agentId) {
+            currentAgent = agentId;
+            const agent = agentsData[agentId];
+            if (!agent) return;
+            document.getElementById('edit-agent-id').value = agent.id;
+            document.getElementById('edit-agent-title').textContent = agent.name;
+            document.getElementById('edit-agent-name').value = agent.name;
+            document.getElementById('edit-agent-emoji').value = agent.emoji;
+            document.getElementById('edit-agent-role').value = agent.role;
+            document.getElementById('edit-agent-model').value = agent.model;
+            document.getElementById('edit-agent-fallback').value = agent.fallback;
+            document.getElementById('edit-agent-tools').value = agent.tools;
+            document.getElementById('edit-agent-thinking').value = agent.thinking;
+            document.getElementById('edit-agent-soul').value = agent.soul;
+            openModal('edit-agent-modal');
+        }
+
+        function closeAgentPreview() { document.getElementById('agent-preview').style.display = 'none'; }
+
+        function saveAgent() {
+            const id = document.getElementById('agent-id').value.trim();
+            const name = document.getElementById('agent-name').value.trim();
+            const soul = document.getElementById('agent-soul').value.trim();
+            if (!id || !name) { alert('ID and Name are required!'); return; }
+            agentsData[id] = {
+                id, name,
+                emoji: document.getElementById('agent-emoji').value || '🤖',
+                role: document.getElementById('agent-role').value || 'Assistant',
+                model: document.getElementById('agent-model').value,
+                fallback: document.getElementById('agent-fallback').value,
+                tools: document.getElementById('agent-tools').value,
+                thinking: document.getElementById('agent-thinking').value,
+                type: document.getElementById('agent-type').value,
+                soul: soul || `# SOUL.md - ${name}\n\n## Who I Am\nI am ${name}.\n\n## My Function\n- To be defined`
+            };
+            addAgentToList(id);
+            alert(`Agent "${name}" created!\n\nNote: requires gateway restart to activate.`);
+            closeModal('agent-modal');
+            document.getElementById('agent-id').value = '';
+            document.getElementById('agent-name').value = '';
+            document.getElementById('agent-soul').value = '';
+        }
+
+        function addAgentToList(agentId) {
+            const agent = agentsData[agentId];
+            const list = document.getElementById('agents-list');
+            const item = document.createElement('div');
+            item.className = 'list-item agent-card';
+            item.setAttribute('data-agent', agentId);
+            item.onclick = () => openAgentDetail(agentId);
+            item.style.cursor = 'pointer';
+            item.innerHTML = `
+                <div class="list-info">
+                    <div class="list-icon ${agent.type === 'master' ? 'red' : 'blue'}">
+                        <i class="fas fa-${agent.type === 'master' ? 'crown' : 'robot'}"></i>
+                    </div>
+                    <div class="list-text">
+                        <h4>${agent.name} <span class="badge badge-orange">New</span></h4>
+                        <p>${agent.role} • ${agent.model.split('/')[1]}</p>
+                    </div>
+                </div>
+                <div class="list-actions" onclick="event.stopPropagation();">
+                    <button class="btn btn-secondary btn-small" onclick="openAgentDetail('${agentId}')">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-danger btn-small" onclick="confirmDeleteAgent('${agentId}')">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            list.appendChild(item);
+        }
+
+        function updateAgent() {
+            const id = document.getElementById('edit-agent-id').value;
+            if (!agentsData[id]) return;
+            agentsData[id].name = document.getElementById('edit-agent-name').value;
+            agentsData[id].emoji = document.getElementById('edit-agent-emoji').value;
+            agentsData[id].role = document.getElementById('edit-agent-role').value;
+            agentsData[id].model = document.getElementById('edit-agent-model').value;
+            agentsData[id].fallback = document.getElementById('edit-agent-fallback').value;
+            agentsData[id].tools = document.getElementById('edit-agent-tools').value;
+            agentsData[id].thinking = document.getElementById('edit-agent-thinking').value;
+            agentsData[id].soul = document.getElementById('edit-agent-soul').value;
+            const card = document.querySelector(`[data-agent="${id}"]`);
+            if (card) {
+                const title = card.querySelector('h4');
+                const desc = card.querySelector('p');
+                const isMaster = agentsData[id].type === 'master';
+                title.innerHTML = `${agentsData[id].name} ${isMaster ? '<span class="badge badge-green">Master</span>' : '<span class="badge badge-orange">Inactive</span>'}`;
+                desc.textContent = `${agentsData[id].role} • ${agentsData[id].model.split('/')[1]}`;
+            }
+            alert('Agent updated!\n\nNote: some changes require restart.');
+            closeModal('edit-agent-modal');
+        }
+
+        function confirmDeleteAgent(agentId) {
+            const agent = agentsData[agentId];
+            if (!agent) return;
+            if (agent.type === 'master') { alert('Cannot delete Master agent (Nia)!'); return; }
+            if (confirm(`Delete agent "${agent.name}" permanently?\n\nThis action cannot be undone.`)) {
+                deleteAgent(agentId);
+            }
+        }
+
+        function deleteAgent(agentId) {
+            const id = agentId || document.getElementById('edit-agent-id').value;
+            if (!agentsData[id]) return;
+            const name = agentsData[id].name;
+            delete agentsData[id];
+            const card = document.querySelector(`[data-agent="${id}"]`);
+            if (card) card.remove();
+            alert(`Agent "${name}" deleted.`);
+            closeModal('edit-agent-modal');
+        }
+
+        function loadDefaultSoul() {
+            const id = document.getElementById('edit-agent-id').value;
+            const agent = agentsData[id];
+            if (agent && agent.soul) document.getElementById('edit-agent-soul').value = agent.soul;
+        }
+
+        function exportSoul() {
+            const soul = document.getElementById('edit-agent-soul').value;
+            const id = document.getElementById('edit-agent-id').value;
+            const blob = new Blob([soul], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `${id}-SOUL.md`; a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function setupSubagent(name) {
+            document.getElementById('agent-id').value = name;
+            document.getElementById('agent-name').value = name.charAt(0).toUpperCase() + name.slice(1);
+            openModal('agent-modal');
+        }
+
+        function confirmRestart() {
+            if (confirm('Restart OpenClaw Gateway?')) alert('Gateway restarting...');
+        }
+        function checkUpdate() { alert('Checking updates...\nUpdate available: 2026.2.14'); }
+        function refreshStatus() { alert('Status updated!'); }
+        function restartAgent(agentId) {
+            if (confirm('Restart agent ' + agentId + '?')) alert('Agent ' + agentId + ' restarted.');
+        }
+        function saveCron() {
+            const name = document.getElementById('cron-name').value;
+            if (name) {
+                alert('Cron job "' + name + '" created!\n\nNote: requires gateway restart.');
+                closeModal('cron-modal');
+            }
+        }
+        function toggleAdvanced() {
+            const checkbox = document.getElementById('advanced-mode');
+            document.getElementById('advanced-content').style.display = checkbox.checked ? 'block' : 'none';
+        }
+        function viewConnection(conn) {
+            const details = {
+                telegram: 'Telegram Bot: @NiaSantos_bot\nGroups: 2 active\nStatus: Online',
+                email: 'Account: evobtob@gmail.com\nGOG CLI: Configured\nLast sync: Now',
+                github: 'User: nia-evob\ngh CLI: Authenticated\nRepos: Accessible',
+                browser: 'Chrome Relay: Active\nTabs: 1 connected\nProfile: chrome',
+                cron: 'Scheduler: Active\nJobs: 0 configured\nNext: N/A'
+            };
+            alert(details[conn] || 'Details not available');
+        }
+        function reconnect(conn) { alert('Reconnecting ' + conn + '...'); }
+        function fixSecurity(issue) {
+            const fixes = {
+                grouppolicy: 'Recommended:\n1. Change groupPolicy to "allowlist"\n2. Configure strict allowlist\n3. Restart gateway',
+                telegram: 'Recommended:\n1. Set Telegram groupPolicy="allowlist"\n2. Specify allowed groups\n3. Restart gateway'
+            };
+            alert(fixes[issue] || 'Fix not available');
+        }
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
+        });
+
+        // ==================== TASKS MANAGEMENT ====================
+        let tasksData = {};
+        let currentTaskId = null;
+
+        function openTaskModal(taskId = null) {
+            currentTaskId = taskId;
+            const modalTitle = document.getElementById('task-modal-title');
+            const deleteBtn = document.getElementById('task-delete-btn');
+
+            if (taskId && tasksData[taskId]) {
+                const task = tasksData[taskId];
+                modalTitle.textContent = 'Edit Task';
+                document.getElementById('task-id').value = taskId;
+                document.getElementById('task-title').value = task.title;
+                document.getElementById('task-description').value = task.description || '';
+                document.getElementById('task-status').value = task.status;
+                document.getElementById('task-priority').value = task.priority;
+                document.getElementById('task-agent').value = task.agent || '';
+                document.getElementById('task-due').value = task.due || '';
+                deleteBtn.style.display = 'inline-flex';
+            } else {
+                modalTitle.textContent = 'New Task';
+                document.getElementById('task-id').value = '';
+                document.getElementById('task-title').value = '';
+                document.getElementById('task-description').value = '';
+                document.getElementById('task-status').value = 'pending';
+                document.getElementById('task-priority').value = 'medium';
+                document.getElementById('task-agent').value = '';
+                document.getElementById('task-due').value = '';
+                deleteBtn.style.display = 'none';
+            }
+            openModal('task-modal');
+        }
+
+        function saveTask() {
+            const id = currentTaskId || 'task_' + Date.now();
+            const title = document.getElementById('task-title').value.trim();
+            if (!title) { alert('Task title is required!'); return; }
+
+            tasksData[id] = {
+                id,
+                title,
+                description: document.getElementById('task-description').value.trim(),
+                status: document.getElementById('task-status').value,
+                priority: document.getElementById('task-priority').value,
+                agent: document.getElementById('task-agent').value,
+                due: document.getElementById('task-due').value,
+                created: tasksData[id]?.created || new Date().toISOString(),
+                updated: new Date().toISOString()
+            };
+
+            renderTasks();
+            closeModal('task-modal');
+            alert(currentTaskId ? 'Task updated!' : 'Task created!');
+        }
+
+        function deleteTaskConfirm() {
+            if (currentTaskId && confirm('Delete this task?')) {
+                delete tasksData[currentTaskId];
+                renderTasks();
+                closeModal('task-modal');
+                alert('Task deleted.');
+            }
+        }
+
+        function renderTasks() {
+            const running = Object.values(tasksData).filter(t => t.status === 'running');
+            const pending = Object.values(tasksData).filter(t => t.status === 'pending');
+            const completed = Object.values(tasksData).filter(t => t.status === 'completed');
+
+            document.getElementById('running-tasks-count').textContent = running.length;
+            document.getElementById('pending-tasks-count').textContent = pending.length;
+            document.getElementById('completed-tasks-count').textContent = completed.length;
+
+            renderTaskList('tasks-running-list', running, 'No running tasks', 'fa-spinner fa-spin');
+            renderTaskList('tasks-pending-list', pending, 'No pending tasks', 'fa-hourglass-half');
+            renderTaskList('tasks-completed-list', completed, 'No completed tasks', 'fa-check-circle');
+        }
+
+        function renderTaskList(containerId, tasks, emptyMsg, emptyIcon) {
+            const container = document.getElementById(containerId);
+            if (tasks.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas ${emptyIcon}"></i><p>${emptyMsg}</p></div>`;
+                return;
+            }
+
+            const priorityColors = { urgent: 'red', high: 'orange', medium: 'blue', low: 'green' };
+            const statusBadges = { running: 'green', pending: 'orange', completed: 'green' };
+
+            container.innerHTML = tasks.map(task => `
+                <div class="list-item" style="cursor: pointer;" onclick="openTaskModal('${task.id}')">
+                    <div class="list-info">
+                        <div class="list-icon ${priorityColors[task.priority] || 'blue'}">
+                            <i class="fas fa-${task.status === 'running' ? 'spinner fa-spin' : task.status === 'completed' ? 'check' : 'clock'}"></i>
+                        </div>
+                        <div class="list-text">
+                            <h4>${task.title} <span class="badge badge-${statusBadges[task.status]}">${task.status}</span></h4>
+                            <p>${task.description || 'No description'} ${task.agent ? '• Assigned: ' + task.agent : ''} ${task.due ? '• Due: ' + new Date(task.due).toLocaleString() : ''}</p>
+                        </div>
+                    </div>
+                    <div class="list-actions" onclick="event.stopPropagation();">
+                        <button class="btn btn-secondary btn-small" onclick="openTaskModal('${task.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-small" onclick="deleteTask('${task.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function deleteTask(taskId) {
+            if (confirm('Delete this task?')) {
+                delete tasksData[taskId];
+                renderTasks();
+                alert('Task deleted.');
+            }
+        }
+
+        // ==================== CRON JOBS MANAGEMENT ====================
+        let cronJobsData = {};
+        let currentCronJobId = null;
+
+        function openCronPageModal(jobId = null) {
+            currentCronJobId = jobId;
+            const modalTitle = document.getElementById('cron-page-modal-title');
+            const deleteBtn = document.getElementById('cron-job-delete-btn');
+
+            if (jobId && cronJobsData[jobId]) {
+                const job = cronJobsData[jobId];
+                modalTitle.textContent = 'Edit Cron Job';
+                document.getElementById('cron-job-id').value = jobId;
+                document.getElementById('cron-job-name').value = job.name;
+                document.getElementById('cron-job-desc').value = job.description || '';
+                document.getElementById('cron-job-schedule-type').value = job.scheduleType || 'every';
+                document.getElementById('cron-job-interval').value = job.interval || '15m';
+                document.getElementById('cron-job-cron-expr').value = job.cronExpr || '';
+                document.getElementById('cron-job-payload-type').value = job.payloadType || 'systemEvent';
+                document.getElementById('cron-job-payload').value = job.payload || '';
+                document.getElementById('cron-job-enabled').checked = job.enabled !== false;
+                deleteBtn.style.display = 'inline-flex';
+            } else {
+                modalTitle.textContent = 'New Cron Job';
+                document.getElementById('cron-job-id').value = '';
+                document.getElementById('cron-job-name').value = '';
+                document.getElementById('cron-job-desc').value = '';
+                document.getElementById('cron-job-schedule-type').value = 'every';
+                document.getElementById('cron-job-interval').value = '15m';
+                document.getElementById('cron-job-cron-expr').value = '';
+                document.getElementById('cron-job-payload-type').value = 'systemEvent';
+                document.getElementById('cron-job-payload').value = '';
+                document.getElementById('cron-job-enabled').checked = true;
+                deleteBtn.style.display = 'none';
+            }
+            updateScheduleFields();
+            openModal('cron-page-modal');
+        }
+
+        function updateScheduleFields() {
+            const type = document.getElementById('cron-job-schedule-type').value;
+            document.getElementById('cron-job-interval-group').style.display = type === 'every' ? 'block' : 'none';
+            document.getElementById('cron-job-cron-expr-group').style.display = type === 'cron' ? 'block' : 'none';
+        }
+
+        function saveCronJob() {
+            const id = currentCronJobId || 'cron_' + Date.now();
+            const name = document.getElementById('cron-job-name').value.trim();
+            if (!name) { alert('Job name is required!'); return; }
+
+            const payload = document.getElementById('cron-job-payload').value.trim();
+            if (!payload) { alert('Command/Message is required!'); return; }
+
+            cronJobsData[id] = {
+                id,
+                name,
+                description: document.getElementById('cron-job-desc').value.trim(),
+                scheduleType: document.getElementById('cron-job-schedule-type').value,
+                interval: document.getElementById('cron-job-interval').value,
+                cronExpr: document.getElementById('cron-job-cron-expr').value.trim(),
+                payloadType: document.getElementById('cron-job-payload-type').value,
+                payload,
+                enabled: document.getElementById('cron-job-enabled').checked,
+                created: cronJobsData[id]?.created || new Date().toISOString(),
+                lastRun: cronJobsData[id]?.lastRun || null,
+                nextRun: calculateNextRun(document.getElementById('cron-job-schedule-type').value, document.getElementById('cron-job-interval').value)
+            };
+
+            renderCronJobs();
+            closeModal('cron-page-modal');
+            alert(currentCronJobId ? 'Cron job updated!' : 'Cron job created!');
+        }
+
+        function deleteCronJobConfirm() {
+            if (currentCronJobId && confirm('Delete this cron job?')) {
+                delete cronJobsData[currentCronJobId];
+                renderCronJobs();
+                closeModal('cron-page-modal');
+                alert('Cron job deleted.');
+            }
+        }
+
+        function calculateNextRun(scheduleType, interval) {
+            const now = new Date();
+            if (scheduleType === 'every') {
+                const num = parseInt(interval);
+                const unit = interval.slice(-1);
+                const multipliers = { m: 60000, h: 3600000, d: 86400000 };
+                return new Date(now.getTime() + num * (multipliers[unit] || 60000)).toISOString();
+            }
+            return null;
+        }
+
+        function renderCronJobs() {
+            const jobs = Object.values(cronJobsData);
+            const active = jobs.filter(j => j.enabled);
+            const paused = jobs.filter(j => !j.enabled);
+
+            document.getElementById('cron-total-count').textContent = jobs.length;
+            document.getElementById('cron-active-count').textContent = active.length;
+            document.getElementById('cron-paused-count').textContent = paused.length;
+
+            const nextRun = jobs.filter(j => j.enabled && j.nextRun).sort((a, b) => new Date(a.nextRun) - new Date(b.nextRun))[0];
+            document.getElementById('cron-next-run').textContent = nextRun ? new Date(nextRun.nextRun).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '--';
+
+            const container = document.getElementById('cron-jobs-list');
+            if (jobs.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-clock"></i><p>No cron jobs configured</p><button class="btn btn-primary" style="margin-top: var(--spacing-md);" onclick="openCronPageModal()"><i class="fas fa-plus"></i> Create First Job</button></div>`;
+                return;
+            }
+
+            container.innerHTML = jobs.map(job => {
+                const scheduleText = job.scheduleType === 'every' ? `Every ${job.interval}` : job.scheduleType === 'cron' ? job.cronExpr : 'At specific time';
+                return `
+                <div class="list-item" style="cursor: pointer;" onclick="openCronPageModal('${job.id}')">
+                    <div class="list-info">
+                        <div class="list-icon ${job.enabled ? 'green' : 'orange'}">
+                            <i class="fas fa-${job.enabled ? 'clock' : 'pause-circle'}"></i>
+                        </div>
+                        <div class="list-text">
+                            <h4>${job.name} <span class="badge badge-${job.enabled ? 'green' : 'orange'}">${job.enabled ? 'Active' : 'Paused'}</span></h4>
+                            <p>${job.description || 'No description'} • ${scheduleText} • ${job.payloadType}</p>
+                        </div>
+                    </div>
+                    <div class="list-actions" onclick="event.stopPropagation();">
+                        <button class="btn btn-secondary btn-small" onclick="toggleCronJob('${job.id}')"><i class="fas fa-${job.enabled ? 'pause' : 'play'}"></i></button>
+                        <button class="btn btn-secondary btn-small" onclick="openCronPageModal('${job.id}')"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-danger btn-small" onclick="deleteCronJob('${job.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function toggleCronJob(jobId) {
+            if (cronJobsData[jobId]) {
+                cronJobsData[jobId].enabled = !cronJobsData[jobId].enabled;
+                renderCronJobs();
+                alert(`Cron job ${cronJobsData[jobId].enabled ? 'enabled' : 'paused'}.`);
+            }
+        }
+
+        function deleteCronJob(jobId) {
+            if (confirm('Delete this cron job?')) {
+                delete cronJobsData[jobId];
+                renderCronJobs();
+                alert('Cron job deleted.');
+            }
+        }
+
+        function refreshCronJobs() {
+            renderCronJobs();
+            alert('Cron jobs refreshed!');
+        }
+
+        // ==================== VERSION MANAGEMENT ====================
+        function switchVersion(version) {
+            if (version && version !== window.location.pathname) {
+                window.location.href = version;
+            }
+        }
+
+        function detectVersion() {
+            const path = window.location.pathname;
+            const selector = document.getElementById('version-selector');
+            const badge = document.getElementById('version-badge');
+
+            if (path.includes('/v1.0/')) {
+                badge.textContent = 'v1.0';
+                selector.value = './v1.0/';
+            } else if (path.includes('/v1.1/')) {
+                badge.textContent = 'v1.1';
+                selector.value = './v1.1/';
+            } else {
+                badge.textContent = 'v1.2';
+                selector.value = './';
+            }
+        }
+
+        // ==================== OPENCLAW API INTEGRATION ====================
+        // Usa porta 18790 (OpenClaw Bridge) em vez de 18789 (gateway direto)
+        // porque o gateway não expõe API REST pública
+        const OPENCLAW_CONFIG = {
+            host: 'localhost',
+            port: 18791,  // OpenClaw Bridge port (não 18789!)
+            token: localStorage.getItem('openclaw_token') || '',
+            connected: false
+        };
+
+        // Detect if running in local mode (same origin)
+        function isLocalMode() {
+            return window.location.port === '8888' || window.location.port === '8080' || (window.location.hostname === 'localhost' && window.location.port !== '');
+        }
+
+        function getApiUrl(endpoint) {
+            // If running locally on port 8080, use the same port (proxy mode)
+            // O servidor local faz proxy para o OpenClaw Bridge na porta 18790
+            if (isLocalMode()) {
+                return `${window.location.origin}${endpoint}`;
+            }
+            // Fallback direto ao Bridge (não recomendado por CORS)
+            return `http://${OPENCLAW_CONFIG.host}:${OPENCLAW_CONFIG.port}${endpoint}`;
+        }
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENCLAW_CONFIG.token}`
+            };
+        }
+
+        async function openclawRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(getApiUrl(endpoint), {
+                    ...options,
+                    headers: { ...getHeaders(), ...options.headers }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('OpenClaw API Error:', error);
+                showConnectionError(error.message);
+                return null;
+            }
+        }
+
+        function showConnectionError(message) {
+            const statusText = document.getElementById('gateway-status-text');
+            const state = document.getElementById('gateway-state');
+            const dot = document.getElementById('status-dot');
+            const localBadge = document.getElementById('local-mode-badge');
+
+            // Check if running on GitHub Pages
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const localMode = isLocalMode();
+
+            if (isGitHubPages) {
+                if (statusText) {
+                    statusText.textContent = 'OFFLINE (CORS)';
+                    statusText.style.color = 'var(--accent-tesla)';
+                }
+                if (state) state.textContent = 'Use Local Mode';
+                if (dot) {
+                    dot.style.background = 'var(--accent-tesla)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-tesla)';
+                }
+            } else if (localMode) {
+                // Local mode - show Local Mode badge but keep trying
+                if (statusText) {
+                    statusText.textContent = 'CONNECTING...';
+                    statusText.style.color = 'var(--accent-orange)';
+                }
+                if (state) state.textContent = 'Via Proxy';
+                if (dot) {
+                    dot.style.background = 'var(--accent-orange)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-orange)';
+                }
+                if (localBadge) localBadge.style.display = 'inline-block';
+            } else {
+                // Other mode
+                if (statusText) {
+                    statusText.textContent = 'OFFLINE';
+                    statusText.style.color = 'var(--accent-tesla)';
+                }
+                if (state) state.textContent = 'Check Gateway';
+                if (dot) {
+                    dot.style.background = 'var(--accent-tesla)';
+                    dot.style.boxShadow = '0 0 8px var(--accent-tesla)';
+                }
+            }
+
+            if (isGitHubPages && !window.corsWarningShown) {
+                window.corsWarningShown = true;
+                const helpHTML = `
+<div id="cors-banner" style="position: fixed; top: 0; left: 0; right: 0; background: var(--accent-tesla); color: white; padding: 12px 16px; z-index: 9999; font-size: 0.875rem; display: flex; justify-content: space-between; align-items: center;">
+    <span><i class="fas fa-exclamation-triangle"></i> <strong>CORS Blocked:</strong> GitHub Pages cannot connect to localhost. Run locally for live data sync.</span>
+    <button onclick="showCORSHelp()" style="background: white; color: var(--accent-tesla); border: none; padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: 600;">Fix</button>
+</div>
+                `;
+                document.body.insertAdjacentHTML('afterbegin', helpHTML);
+                const cronNotice = document.getElementById('cron-cors-notice');
+                if (cronNotice) cronNotice.style.display = 'block';
+            }
+
+            console.warn('Mission Control: Connection issue -', message);
+        }
+
+        function showCORSHelp() {
+            const isLocal = isLocalMode();
+
+            if (isLocal) {
+                alert(`🔧 MODO LOCAL - Arquitetura com Bridge
+
+Estás a correr em modo local (localhost:8888).
+
+Para sincronização completa com OpenClaw, precisas de 2 servidores:
+
+1. OpenClaw Bridge (porta 18791):
+   cd ~/.openclaw/workspace/mission-control
+   python3 openclaw-bridge.py
+
+2. Mission Control Server (porta 8888):
+   cd ~/.openclaw/workspace/mission-control
+   python3 local/server.py
+
+3. Abre no browser:
+   http://localhost:8888
+
+⚠️ IMPORTANTE: O Bridge é necessário porque o gateway OpenClaw (18789) não expõe API REST pública.
+O Bridge executa comandos CLI e expõe REST API para o Mission Control.`);
+            } else {
+                alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
+
+O Mission Control no GitHub Pages não consegue ligar-se ao OpenClaw por causa das restrições de segurança do browser (CORS).
+
+SOLUÇÃO - Modo Local com Bridge:
+
+1. Abre o Terminal no Mac (2 tabs/janelas):
+
+   Tab 1 - Inicia o Bridge:
+   cd ~/.openclaw/workspace/mission-control
+   python3 openclaw-bridge.py
+
+   Tab 2 - Inicia o servidor:
+   cd ~/.openclaw/workspace/mission-control
+   python3 local/server.py
+
+2. Abre no browser:
+   http://localhost:8888
+
+3. Agora tens sincronização completa!`);
+
+2. Abre no browser:
+   http://localhost:8888
+
+3. Agora tens sincronização completa!`);
+            }
+        }
+
+        // Fetch Gateway Status
+        async function fetchGatewayStatus() {
+            const data = await openclawRequest('/api/v1/gateway/status');
+            if (data && data.ok) {
+                OPENCLAW_CONFIG.connected = true;
+                updateGatewayStatus(data.result);
+            }
+            return data;
+        }
+
+        function updateGatewayStatus(status) {
+            const statusText = document.getElementById('gateway-status-text');
+            const state = document.getElementById('gateway-state');
+            const version = document.getElementById('gateway-version');
+            const model = document.getElementById('current-model');
+            const dot = document.getElementById('status-dot');
+            const localBadge = document.getElementById('local-mode-badge');
+
+            if (statusText) {
+                statusText.textContent = status.running ? 'ACTIVE' : 'INACTIVE';
+                statusText.style.color = status.running ? 'var(--accent-green)' : 'var(--accent-tesla)';
+            }
+            if (state) state.textContent = status.running ? 'Online (Proxy)' : 'Offline';
+            if (version) version.textContent = status.version || 'v2026.2.13';
+            if (model) model.textContent = status.model || 'kimi-k2.5-cloud';
+            if (dot) {
+                dot.style.background = status.running ? 'var(--accent-green)' : 'var(--accent-tesla)';
+                dot.style.boxShadow = status.running ? '0 0 8px var(--accent-green)' : '0 0 8px var(--accent-tesla)';
+            }
+            if (localBadge && isLocalMode()) {
+                localBadge.style.display = 'inline-block';
+            }
+        }
+
+        // Fetch Cron Jobs
+        async function fetchCronJobs() {
+            const data = await openclawRequest('/api/v1/cron/list');
+            if (data && data.ok && data.result && data.result.jobs) {
+                cronJobsData = {};
+                data.result.jobs.forEach(job => {
+                    cronJobsData[job.id] = {
+                        id: job.id,
+                        name: job.name || job.id,
+                        description: job.description || '',
+                        scheduleType: job.schedule?.kind || 'every',
+                        interval: job.schedule?.everyMs ? formatInterval(job.schedule.everyMs) : '15m',
+                        cronExpr: job.schedule?.expr || '',
+                        payloadType: job.payload?.kind || 'systemEvent',
+                        payload: job.payload?.text || job.payload?.message || '',
+                        enabled: job.enabled !== false,
+                        created: job.createdAt,
+                        lastRun: job.lastRunAt,
+                        nextRun: job.nextRunAt
+                    };
+                });
+                renderCronJobs();
+            }
+            return data;
+        }
+
+        function formatInterval(ms) {
+            const minutes = Math.floor(ms / 60000);
+            if (minutes < 60) return `${minutes}m`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h`;
+            return `${Math.floor(hours / 24)}d`;
+        }
+
+        // Create/Update Cron Job via API
+        async function apiSaveCronJob(jobData) {
+            const schedule = jobData.scheduleType === 'cron' 
+                ? { kind: 'cron', expr: jobData.cronExpr, tz: 'Europe/Lisbon' }
+                : { kind: 'every', everyMs: parseInterval(jobData.interval) };
+
+            const payload = jobData.payloadType === 'agentTurn'
+                ? { kind: 'agentTurn', message: jobData.payload, model: 'ollama/kimi-k2.5:cloud' }
+                : { kind: 'systemEvent', text: jobData.payload };
+
+            const job = {
+                name: jobData.name,
+                schedule,
+                payload,
+                enabled: jobData.enabled,
+                sessionTarget: jobData.payloadType === 'agentTurn' ? 'isolated' : 'main'
+            };
+
+            const data = await openclawRequest('/api/v1/cron/add', {
+                method: 'POST',
+                body: JSON.stringify({ job })
+            });
+
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        function parseInterval(interval) {
+            const num = parseInt(interval);
+            const unit = interval.slice(-1);
+            const multipliers = { m: 60000, h: 3600000, d: 86400000 };
+            return num * (multipliers[unit] || 60000);
+        }
+
+        // Delete Cron Job via API
+        async function apiDeleteCronJob(jobId) {
+            const data = await openclawRequest('/api/v1/cron/remove', {
+                method: 'POST',
+                body: JSON.stringify({ jobId })
+            });
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        // Toggle Cron Job via API
+        async function apiToggleCronJob(jobId, enabled) {
+            const data = await openclawRequest('/api/v1/cron/update', {
+                method: 'POST',
+                body: JSON.stringify({ jobId, patch: { enabled } })
+            });
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        // Fetch Sessions
+        async function fetchSessions() {
+            const data = await openclawRequest('/api/v1/sessions/list');
+            if (data && data.ok && data.result) {
+                updateSessionsDisplay(data.result.sessions || []);
+            }
+            return data;
+        }
+
+        function updateSessionsDisplay(sessions) {
+            const activeCount = sessions.filter(s => !s.abortedLastRun).length;
+            const totalTokens = sessions.reduce((sum, s) => sum + (s.totalTokens || 0), 0);
+            
+            // Update KPI cards if they exist
+            const sessionsCard = document.getElementById('active-sessions-count');
+            if (sessionsCard) sessionsCard.textContent = activeCount;
+        }
+
+        // Refresh All Data
+        async function refreshAllData() {
+            await fetchGatewayStatus();
+            await fetchCronJobs();
+            await fetchSessions();
+            
+            if (OPENCLAW_CONFIG.connected) {
+                alert('Data synchronized with OpenClaw gateway!');
+            } else {
+                alert('Note: Running in demo mode. Connect to OpenClaw gateway for live data.');
+            }
+        }
+
+        // Override save functions to use API when connected
+        const originalSaveCronJob = saveCronJob;
+        saveCronJob = async function() {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                // Fallback to local storage mode
+                return originalSaveCronJob();
+            }
+
+            const id = currentCronJobId || 'cron_' + Date.now();
+            const name = document.getElementById('cron-job-name').value.trim();
+            if (!name) { alert('Job name is required!'); return; }
+
+            const payload = document.getElementById('cron-job-payload').value.trim();
+            if (!payload) { alert('Command/Message is required!'); return; }
+
+            const jobData = {
+                id,
+                name,
+                description: document.getElementById('cron-job-desc').value.trim(),
+                scheduleType: document.getElementById('cron-job-schedule-type').value,
+                interval: document.getElementById('cron-job-interval').value,
+                cronExpr: document.getElementById('cron-job-cron-expr').value.trim(),
+                payloadType: document.getElementById('cron-job-payload-type').value,
+                payload,
+                enabled: document.getElementById('cron-job-enabled').checked
+            };
+
+            if (await apiSaveCronJob(jobData)) {
+                closeModal('cron-page-modal');
+                alert(currentCronJobId ? 'Cron job updated!' : 'Cron job created!');
+            } else {
+                alert('Failed to save cron job. Check console for details.');
+            }
+        };
+
+        const originalDeleteCronJob = deleteCronJob;
+        deleteCronJob = async function(jobId) {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                return originalDeleteCronJob(jobId);
+            }
+
+            if (confirm('Delete this cron job?')) {
+                if (await apiDeleteCronJob(jobId)) {
+                    alert('Cron job deleted.');
+                } else {
+                    alert('Failed to delete cron job.');
+                }
+            }
+        };
+
+        const originalToggleCronJob = toggleCronJob;
+        toggleCronJob = async function(jobId) {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                return originalToggleCronJob(jobId);
+            }
+
+            const job = cronJobsData[jobId];
+            if (job) {
+                const newEnabled = !job.enabled;
+                if (await apiToggleCronJob(jobId, newEnabled)) {
+                    alert(`Cron job ${newEnabled ? 'enabled' : 'paused'}.`);
+                } else {
+                    alert('Failed to toggle cron job.');
+                }
+            }
+        };
+
+        // Setup Token Input
+        function setupApiToken() {
+            // Check if we're in local mode and try auto-connect
+            if (isLocalMode() && !OPENCLAW_CONFIG.token) {
+                // Try to connect without token first (local mode might work without)
+                console.log('Local mode detected - attempting auto-connect');
+            }
+
+            if (!OPENCLAW_CONFIG.token && !isLocalMode()) {
+                const token = prompt('Enter OpenClaw gateway token for live data sync:\n\n(Leave empty for demo mode)\n\nTo get token: cat ~/.openclaw/openclaw.json | grep token');
+                if (token) {
+                    OPENCLAW_CONFIG.token = token;
+                    localStorage.setItem('openclaw_token', token);
+                }
+            }
+        }
+
+        // Initialize
+        renderTasks();
+        renderCronJobs();
+        detectVersion();
+        setupApiToken();
+        
+        // Try to connect on load
+        setTimeout(() => {
+            fetchGatewayStatus().then(() => {
+                if (OPENCLAW_CONFIG.connected) {
+                    fetchCronJobs();
+                    fetchSessions();
+                }
+            });
+        }, 1000);
+
+        // Just update nav active state - CSS :target handles page visibility
+        function updateNavActive(tabId) {
+            document.querySelectorAll('.nav-item').forEach(function(n) {
+                n.classList.remove('active');
+            });
+            var activeNav = document.querySelector('.nav-item[data-page="' + tabId + '"]');
+            if (activeNav) activeNav.classList.add('active');
+        }
+        
+        // Handle initial hash on load
+        window.addEventListener('load', function() {
+            var hash = window.location.hash.replace('#page-', '');
+            if (hash && hash !== 'overview') {
+                updateNavActive(hash);
+            }
+        });
+        
+        // Also handle hash changes (back/forward buttons)
+        window.addEventListener('hashchange', function() {
+            var hash = window.location.hash.replace('#page-', '');
+            if (hash) {
+                updateNavActive(hash);
+            } else {
+                // No hash = overview
+                updateNavActive('overview');
+            }
+        });
+    </script>
 </body>
 </html>
