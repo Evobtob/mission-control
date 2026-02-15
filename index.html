@@ -1659,13 +1659,29 @@ I am [Name], a specialized assistant for...
 
             // Update nav items
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            if (clickedElement) {
-                clickedElement.classList.add('active');
+
+            // Get the clicked element - either passed directly or from event
+            let activeElement = clickedElement;
+            if (!activeElement && typeof event !== 'undefined' && event.currentTarget) {
+                activeElement = event.currentTarget;
+            }
+
+            if (activeElement) {
+                // If it's not a nav-item (e.g., a button inside a card), find parent nav-item
+                if (!activeElement.classList.contains('nav-item')) {
+                    const parentNav = activeElement.closest('.nav-item');
+                    if (parentNav) parentNav.classList.add('active');
+                } else {
+                    activeElement.classList.add('active');
+                }
             } else {
-                // Try to find nav item by onclick attribute
-                const navItem = document.querySelector(`.nav-item[onclick*="'${pageId}'"]`) ||
-                                  document.querySelector(`.nav-item[onclick*="${pageId}"]`);
-                if (navItem) navItem.classList.add('active');
+                // Fallback: find nav item by pageId
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(pageId)) {
+                        item.classList.add('active');
+                    }
+                });
             }
         }
 
