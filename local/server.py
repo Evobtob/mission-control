@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """
-Mission Control Local Server with OpenClaw Proxy
+Mission Control Local Server with OpenClaw Bridge Proxy
 
 Este servidor:
 1. Serve o Mission Control em http://localhost:8080
-2. Faz proxy dos pedidos para o OpenClaw gateway (evita CORS)
+2. Faz proxy dos pedidos /api/* para o OpenClaw Bridge (localhost:18790)
+
+O OpenClaw Bridge é necessário porque o gateway OpenClaw (porta 18789) não expõe API REST.
+O Bridge executa comandos CLI e expõe REST API na porta 18790.
 
 Uso:
     cd ~/.openclaw/workspace/mission-control
     python3 local/server.py
 
-Depois abre: http://localhost:8080
+Requisitos:
+    1. OpenClaw Bridge deve estar a correr:
+       python3 openclaw-bridge.py
+
+    2. Depois abre: http://localhost:8080
 """
 
 import http.server
@@ -18,11 +25,12 @@ import socketserver
 import urllib.request
 import json
 import os
-import ssl
+import subprocess
 
 PORT = 8080
-OPENCLAW_PORT = 18789
+BRIDGE_PORT = 18790  # Porta do OpenClaw Bridge
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
+
 
 class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
     def end_headers(self):
@@ -41,31 +49,54 @@ class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
         parent_dir = os.path.dirname(DIRECTORY)
         return os.path.join(parent_dir, path.lstrip('/'))
 
+    def check_bridge_running(self):
+        """Verifica se o bridge está a correr"""
+        try:
+            # Tenta fazer um pedido simples ao bridge
+            req = urllib.request.Request(f'http://localhost:{BRIDGE_PORT}/', method='HEAD')
+            with urllib.request.urlopen(req, timeout=2) as response:
+                return True
+        except:
+            return False
+
     def do_GET(self):
-        # Proxy OpenClaw API requests
+        # Proxy OpenClaw API requests to the Bridge
         if self.path.startswith('/api/'):
-            self.proxy_to_openclaw('GET')
+            self.proxy_to_bridge('GET')
             return
         super().do_GET()
 
     def do_POST(self):
-        # Proxy OpenClaw API requests
+        # Proxy OpenClaw API requests to the Bridge
         if self.path.startswith('/api/'):
-            self.proxy_to_openclaw('POST')
+            self.proxy_to_bridge('POST')
             return
         super().do_POST()
 
     def do_PATCH(self):
-        # Proxy OpenClaw API requests
         if self.path.startswith('/api/'):
-            self.proxy_to_openclaw('PATCH')
+            self.proxy_to_bridge('PATCH')
             return
         self.send_error(405, "Method not allowed")
 
-    def proxy_to_openclaw(self, method):
-        """Forward request to OpenClaw gateway"""
+    def proxy_to_bridge(self, method):
+        """Forward request to OpenClaw Bridge"""
+
+        # Verifica se bridge está a correr
+        if not self.check_bridge_running():
+            self.send_response(503)
+            self.send_header('Content-Type', 'application/json')
+            self.end_headers()
+            error_response = json.dumps({
+                "ok": False,
+                "error": "OpenClaw Bridge offline",
+                "message": f"O Bridge não está a correr em localhost:{BRIDGE_PORT}.\n\nPara iniciar:\n1. Abre outro terminal\n2. cd ~/.openclaw/workspace/mission-control\n3. python3 openclaw-bridge.py"
+            })
+            self.wfile.write(error_response.encode())
+            return
+
         try:
-            target_url = f"http://localhost:{OPENCLAW_PORT}{self.path}"
+            target_url = f"http://localhost:{BRIDGE_PORT}{self.path}"
 
             # Read request body if present
             body = None
@@ -87,9 +118,9 @@ class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 headers=req_headers
             )
 
-            # Send request to OpenClaw
+            # Send request to Bridge
             try:
-                with urllib.request.urlopen(req, timeout=5) as response:
+                with urllib.request.urlopen(req, timeout=10) as response:
                     response_body = response.read()
                     self.send_response(response.status)
                     # Copy response headers
@@ -116,14 +147,14 @@ class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
                 return
 
         except urllib.error.URLError as e:
-            # Connection refused - gateway not running
+            # Connection refused - bridge not running
             self.send_response(503)
             self.send_header('Content-Type', 'application/json')
             self.end_headers()
             error_response = json.dumps({
                 "ok": False,
-                "error": "Gateway offline",
-                "message": f"Cannot connect to OpenClaw gateway at localhost:{OPENCLAW_PORT}. Is it running? Try: openclaw gateway start"
+                "error": "Bridge connection failed",
+                "message": f"Cannot connect to OpenClaw Bridge at localhost:{BRIDGE_PORT}. Is it running?"
             })
             self.wfile.write(error_response.encode())
         except Exception as e:
@@ -133,19 +164,40 @@ class CORSRequestHandler(http.server.SimpleHTTPRequestHandler):
             error_response = json.dumps({
                 "ok": False,
                 "error": str(e),
-                "message": f"Failed to connect to OpenClaw gateway. Is it running on port {OPENCLAW_PORT}?"
+                "message": f"Failed to proxy to Bridge on port {BRIDGE_PORT}"
             })
             self.wfile.write(error_response.encode())
+
 
 if __name__ == '__main__':
     os.chdir(os.path.dirname(DIRECTORY))
 
+    # Verifica se bridge está a correr
+    bridge_running = False
+    try:
+        req = urllib.request.Request(f'http://localhost:{BRIDGE_PORT}/', method='HEAD')
+        with urllib.request.urlopen(req, timeout=2) as response:
+            bridge_running = True
+    except:
+        pass
+
+    print(f"🚀 Mission Control Server running at http://localhost:{PORT}")
+    print(f"📁 Serving files from: {os.path.dirname(DIRECTORY)}")
+
+    if bridge_running:
+        print(f"🔗 OpenClaw Bridge: ✅ Connected (port {BRIDGE_PORT})")
+        print(f"   API Proxy active: /api/* → localhost:{BRIDGE_PORT}")
+    else:
+        print(f"⚠️  OpenClaw Bridge: ❌ NOT RUNNING")
+        print(f"   Para iniciar o Bridge:")
+        print(f"   python3 openclaw-bridge.py")
+        print(f"")
+        print(f"   O Mission Control vai funcionar em modo offline até o Bridge iniciar.")
+
+    print(f"\n💡 Abre no browser: http://localhost:{PORT}")
+    print(f"=" * 50)
+
     with socketserver.TCPServer(("", PORT), CORSRequestHandler) as httpd:
-        print(f"🚀 Mission Control Server running at http://localhost:{PORT}")
-        print(f"📁 Serving files from: {os.path.dirname(DIRECTORY)}")
-        print(f"🔗 OpenClaw Proxy: http://localhost:{PORT}/api/ → http://localhost:{OPENCLAW_PORT}/api/")
-        print("\n💡 Press Ctrl+C to stop")
-        print("=" * 50)
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:

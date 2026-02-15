@@ -2250,9 +2250,11 @@ I am Julia Matos, digital executive secretary.
         }
 
         // ==================== OPENCLAW API INTEGRATION ====================
+        // Usa porta 18790 (OpenClaw Bridge) em vez de 18789 (gateway direto)
+        // porque o gateway não expõe API REST pública
         const OPENCLAW_CONFIG = {
             host: 'localhost',
-            port: 18789,
+            port: 18790,  // OpenClaw Bridge port (não 18789!)
             token: localStorage.getItem('openclaw_token') || '',
             connected: false
         };
@@ -2264,10 +2266,11 @@ I am Julia Matos, digital executive secretary.
 
         function getApiUrl(endpoint) {
             // If running locally on port 8080, use the same port (proxy mode)
-            // Otherwise, try direct connection to gateway
+            // O servidor local faz proxy para o OpenClaw Bridge na porta 18790
             if (isLocalMode()) {
                 return `${window.location.origin}${endpoint}`;
             }
+            // Fallback direto ao Bridge (não recomendado por CORS)
             return `http://${OPENCLAW_CONFIG.host}:${OPENCLAW_CONFIG.port}${endpoint}`;
         }
 
@@ -2358,42 +2361,46 @@ I am Julia Matos, digital executive secretary.
             const isLocal = isLocalMode();
 
             if (isLocal) {
-                alert(`🔧 MODO LOCAL - Verificação
+                alert(`🔧 MODO LOCAL - Arquitetura com Bridge
 
 Estás a correr em modo local (localhost:8080).
 
-Se ainda não está sincronizado:
+Para sincronização completa com OpenClaw, precisas de 2 servidores:
 
-1. Verifica se o gateway está a correr:
-   openclaw gateway status
+1. OpenClaw Bridge (porta 18790):
+   cd ~/.openclaw/workspace/mission-control
+   python3 openclaw-bridge.py
 
-2. Se não estiver, inicia-o:
-   openclaw gateway start
-
-3. Recarrega a página
-
-4. Introduz o token se pedido:
-   cat ~/.openclaw/openclaw.json | grep token
-
-O servidor local já está configurado com proxy automático!`);
-            } else {
-                alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
-
-O Mission Control no GitHub Pages não consegue ligar-se ao gateway OpenClaw em localhost:18789 por causa das restrições de segurança do browser (CORS).
-
-SOLUÇÃO - Modo Local:
-
-1. Abre o Terminal no Mac
-2. Executa:
+2. Mission Control Server (porta 8080):
    cd ~/.openclaw/workspace/mission-control
    python3 local/server.py
 
 3. Abre no browser:
    http://localhost:8080
 
-4. Agora tem sincronização completa com OpenClaw!
+⚠️ IMPORTANTE: O Bridge é necessário porque o gateway OpenClaw (18789) não expõe API REST pública.
+O Bridge executa comandos CLI e expõe REST API para o Mission Control.`);
+            } else {
+                alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
 
-O token é guardado automaticamente.`);
+O Mission Control no GitHub Pages não consegue ligar-se ao OpenClaw por causa das restrições de segurança do browser (CORS).
+
+SOLUÇÃO - Modo Local com Bridge:
+
+1. Abre o Terminal no Mac (2 tabs/janelas):
+
+   Tab 1 - Inicia o Bridge:
+   cd ~/.openclaw/workspace/mission-control
+   python3 openclaw-bridge.py
+
+   Tab 2 - Inicia o servidor:
+   cd ~/.openclaw/workspace/mission-control
+   python3 local/server.py
+
+2. Abre no browser:
+   http://localhost:8080
+
+3. Agora tens sincronização completa!`);
             }
         }
 
