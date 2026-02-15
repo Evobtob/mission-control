@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="pt-PT">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
-    <title>OpenClaw Mission Control</title>
+    <title>NIA OS V1</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,14 +13,12 @@
     
     <style>
         :root {
-            /* Tesla Dark Palette */
             --bg-primary: #000000;
             --bg-secondary: #121212;
             --bg-card: #1a1a1a;
             --bg-card-hover: #2a2a2a;
             --bg-elevated: #2d2d2d;
             
-            /* Accents */
             --accent-tesla: #E82127;
             --accent-tesla-light: #FF4D4D;
             --accent-blue: #3B9EFF;
@@ -28,13 +26,11 @@
             --accent-orange: #F79009;
             --accent-purple: #7C3AED;
             
-            /* Text */
             --text-primary: #FFFFFF;
             --text-secondary: rgba(255, 255, 255, 0.7);
             --text-tertiary: rgba(255, 255, 255, 0.5);
             --text-muted: rgba(255, 255, 255, 0.35);
             
-            /* Spacing */
             --spacing-xs: 8px;
             --spacing-sm: 12px;
             --spacing-md: 16px;
@@ -42,13 +38,11 @@
             --spacing-xl: 32px;
             --spacing-2xl: 48px;
             
-            /* Radius */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-xl: 20px;
             
-            /* Shadows */
             --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
             --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
             --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
@@ -68,12 +62,8 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
+        .app { display: flex; min-height: 100vh; }
 
-        /* Sidebar - Minimal Tesla Style */
         .sidebar {
             width: 260px;
             background: var(--bg-secondary);
@@ -121,11 +111,7 @@
             letter-spacing: 0.1em;
         }
 
-        .nav {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
+        .nav { display: flex; flex-direction: column; gap: 4px; }
 
         .nav-item {
             display: flex;
@@ -156,13 +142,8 @@
             box-shadow: inset 0 0 0 1px var(--accent-tesla);
         }
 
-        .nav-item i {
-            width: 20px;
-            text-align: center;
-            font-size: 1rem;
-        }
+        .nav-item i { width: 20px; text-align: center; font-size: 1rem; }
 
-        /* Main Content */
         .main {
             flex: 1;
             margin-left: 260px;
@@ -170,22 +151,14 @@
             min-height: 100vh;
         }
 
-        /* Page Sections */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-            animation: fadeIn 0.3s ease-out;
-        }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease-out; }
 
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Hero Header - OpenClaw Branding */
         .hero {
             text-align: center;
             padding: var(--spacing-2xl) 0;
@@ -235,13 +208,8 @@
             color: var(--text-tertiary);
         }
 
-        .hero-meta span {
-            display: flex;
-            align-items: center;
-            gap: var(--spacing-xs);
-        }
+        .hero-meta span { display: flex; align-items: center; gap: var(--spacing-xs); }
 
-        /* Cards */
         .card {
             background: var(--bg-card);
             border-radius: var(--radius-xl);
@@ -251,9 +219,7 @@
             transition: var(--transition);
         }
 
-        .card:hover {
-            background: var(--bg-card-hover);
-        }
+        .card:hover { background: var(--bg-card-hover); }
 
         .card-header {
             display: flex;
@@ -282,26 +248,10 @@
             margin-top: 4px;
         }
 
-        /* Grid */
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: var(--spacing-lg);
-        }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--spacing-lg); }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg); }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--spacing-lg); }
 
-        .grid-3 {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: var(--spacing-lg);
-        }
-
-        .grid-2 {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-lg);
-        }
-
-        /* Buttons */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -321,9 +271,7 @@
             color: var(--text-primary);
         }
 
-        .btn-secondary:hover {
-            background: var(--bg-card-hover);
-        }
+        .btn-secondary:hover { background: var(--bg-card-hover); }
 
         .btn-primary {
             background: var(--accent-tesla);
@@ -341,16 +289,10 @@
             color: var(--accent-tesla);
         }
 
-        .btn-danger:hover {
-            background: rgba(232, 33, 39, 0.3);
-        }
+        .btn-danger:hover { background: rgba(232, 33, 39, 0.3); }
 
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 0.75rem;
-        }
+        .btn-small { padding: 6px 12px; font-size: 0.75rem; }
 
-        /* Lists */
         .list {
             display: flex;
             flex-direction: column;
@@ -367,9 +309,7 @@
             transition: var(--transition);
         }
 
-        .list-item:hover {
-            background: var(--bg-elevated);
-        }
+        .list-item:hover { background: var(--bg-elevated); }
 
         .list-info {
             display: flex;
@@ -404,12 +344,8 @@
             color: var(--text-tertiary);
         }
 
-        .list-actions {
-            display: flex;
-            gap: var(--spacing-sm);
-        }
+        .list-actions { display: flex; gap: var(--spacing-sm); }
 
-        /* Activity Feed */
         .activity {
             display: flex;
             flex-direction: column;
@@ -444,25 +380,11 @@
             flex-shrink: 0;
         }
 
-        .activity-text {
-            flex: 1;
-        }
+        .activity-text { flex: 1; }
+        .activity-text p { font-size: 0.9375rem; color: var(--text-secondary); }
+        .activity-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
 
-        .activity-text p {
-            font-size: 0.9375rem;
-            color: var(--text-secondary);
-        }
-
-        .activity-time {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        /* Forms */
-        .form-group {
-            margin-bottom: var(--spacing-lg);
-        }
+        .form-group { margin-bottom: var(--spacing-lg); }
 
         .form-label {
             display: block;
@@ -474,9 +396,7 @@
             margin-bottom: var(--spacing-sm);
         }
 
-        .form-input,
-        .form-select,
-        .form-textarea {
+        .form-input, .form-select, .form-textarea {
             width: 100%;
             padding: var(--spacing-md);
             background: var(--bg-secondary);
@@ -488,9 +408,7 @@
             transition: var(--transition);
         }
 
-        .form-input:focus,
-        .form-select:focus,
-        .form-textarea:focus {
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
             outline: none;
             border-color: var(--accent-tesla);
             box-shadow: 0 0 0 3px rgba(232, 33, 39, 0.1);
@@ -501,13 +419,9 @@
             resize: vertical;
         }
 
-        /* Modal */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.8);
             backdrop-filter: blur(8px);
             display: none;
@@ -517,9 +431,7 @@
             padding: var(--spacing-lg);
         }
 
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal {
             background: var(--bg-card);
@@ -564,10 +476,7 @@
             color: white;
         }
 
-        .modal-body {
-            padding: var(--spacing-lg);
-        }
-
+        .modal-body { padding: var(--spacing-lg); }
         .modal-footer {
             display: flex;
             justify-content: flex-end;
@@ -576,7 +485,6 @@
             border-top: 1px solid var(--bg-card-hover);
         }
 
-        /* Toggle Switch */
         .toggle {
             display: flex;
             align-items: center;
@@ -596,28 +504,17 @@
         .toggle-switch::after {
             content: '';
             position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 20px;
-            height: 20px;
+            top: 2px; left: 2px;
+            width: 20px; height: 20px;
             background: white;
             border-radius: 50%;
             transition: var(--transition);
         }
 
-        .toggle input:checked + .toggle-switch {
-            background: var(--accent-green);
-        }
+        .toggle input:checked + .toggle-switch { background: var(--accent-green); }
+        .toggle input:checked + .toggle-switch::after { left: 26px; }
+        .toggle input { display: none; }
 
-        .toggle input:checked + .toggle-switch::after {
-            left: 26px;
-        }
-
-        .toggle input {
-            display: none;
-        }
-
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: var(--spacing-2xl);
@@ -630,7 +527,6 @@
             opacity: 0.5;
         }
 
-        /* Tag/Badge */
         .badge {
             display: inline-flex;
             align-items: center;
@@ -641,22 +537,10 @@
             font-weight: 600;
         }
 
-        .badge-green {
-            background: rgba(18, 183, 106, 0.15);
-            color: var(--accent-green);
-        }
+        .badge-green { background: rgba(18, 183, 106, 0.15); color: var(--accent-green); }
+        .badge-red { background: rgba(232, 33, 39, 0.15); color: var(--accent-tesla); }
+        .badge-orange { background: rgba(247, 144, 9, 0.15); color: var(--accent-orange); }
 
-        .badge-red {
-            background: rgba(232, 33, 39, 0.15);
-            color: var(--accent-tesla);
-        }
-
-        .badge-orange {
-            background: rgba(247, 144, 9, 0.15);
-            color: var(--accent-orange);
-        }
-
-        /* Section Title */
         .section-title {
             font-size: 1.25rem;
             font-weight: 700;
@@ -666,7 +550,6 @@
             gap: var(--spacing-sm);
         }
 
-        /* Responsive */
         @media (max-width: 1200px) {
             .grid-4 { grid-template-columns: repeat(2, 1fr); }
         }
@@ -679,23 +562,10 @@
             .hero-meta { flex-direction: column; gap: var(--spacing-sm); }
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--bg-card-hover);
-            border-radius: var(--radius-full);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--accent-tesla);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        ::-webkit-scrollbar-thumb { background: var(--bg-card-hover); border-radius: var(--radius-full); }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-tesla); }
     </style>
 </head>
 <body>
@@ -703,122 +573,100 @@
         <!-- Sidebar -->
         <nav class="sidebar">
             <div class="brand">
-                <div class="brand-icon">
-                    <i class="fas fa-bolt"></i>
-                </div>
+                <div class="brand-icon"><i class="fas fa-bolt"></i></div>
                 <div class="brand-text">
-                    <h1>OPENCLAW</h1>
+                    <h1>NIA OS</h1>
                     <p>Mission Control</p>
                 </div>
             </div>
 
             <div class="nav">
                 <button class="nav-item active" onclick="showPage('overview')">
-                    <i class="fas fa-home"></i>
-                    <span>Visão Geral</span>
+                    <i class="fas fa-home"></i><span>Overview</span>
                 </button>
                 <button class="nav-item" onclick="showPage('system')">
-                    <i class="fas fa-microchip"></i>
-                    <span>Sistema</span>
+                    <i class="fas fa-microchip"></i><span>System</span>
                 </button>
                 <button class="nav-item" onclick="showPage('agents')">
-                    <i class="fas fa-robot"></i>
-                    <span>Agentes</span>
+                    <i class="fas fa-robot"></i><span>Agents</span>
                 </button>
                 <button class="nav-item" onclick="showPage('connections')">
-                    <i class="fas fa-link"></i>
-                    <span>Ligações</span>
+                    <i class="fas fa-link"></i><span>Connections</span>
                 </button>
                 <button class="nav-item" onclick="showPage('security')">
-                    <i class="fas fa-shield-alt"></i>
-                    <span>Segurança</span>
+                    <i class="fas fa-shield-alt"></i><span>Security</span>
                 </button>
             </div>
         </nav>
 
         <!-- Main Content -->
         <main class="main">
-            <!-- Visão Geral -->
+            <!-- Overview -->
             <div id="page-overview" class="page active">
                 <div class="hero">
-                    <h1 class="hero-title">OPENCLAW</h1>
+                    <h1 class="hero-title">NIA OS V1</h1>
                     <div class="hero-status">
                         <span class="status-dot"></span>
-                        <span>Estado: <strong style="color: var(--accent-green);">ATIVO</strong></span>
+                        <span>Status: <strong style="color: var(--accent-green);">ACTIVE</strong></span>
                     </div>
                     <div class="hero-meta">
-                        <span><i class="fas fa-brain"></i> Modelo: kimi-k2.5-cloud</span>
+                        <span><i class="fas fa-brain"></i> Model: kimi-k2.5-cloud</span>
                         <span><i class="fas fa-clock"></i> Gateway: Online</span>
                         <span><i class="fas fa-code-branch"></i> v2026.2.13</span>
                     </div>
                     <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshStatus()">
-                        <i class="fas fa-sync"></i>
-                        Atualizar
+                        <i class="fas fa-sync"></i> Refresh
                     </button>
                 </div>
 
                 <div class="grid-4">
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Operação</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Operation</span></div>
                         <div class="card-value" style="color: var(--accent-green);">Online</div>
-                        <div class="card-subtitle">Gateway local ativo</div>
+                        <div class="card-subtitle">Local gateway active</div>
                         <button class="btn btn-danger btn-small" style="margin-top: var(--spacing-md);" onclick="confirmRestart()">
-                            <i class="fas fa-power-off"></i>
-                            Reiniciar
+                            <i class="fas fa-power-off"></i> Restart
                         </button>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Agente Principal</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Primary Agent</span></div>
                         <div class="card-value">Nia</div>
-                        <div class="card-subtitle">Master • 3 sessões ativas</div>
+                        <div class="card-subtitle">Master • 3 active sessions</div>
                         <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('agents')">
-                            <i class="fas fa-cog"></i>
-                            Gerir
+                            <i class="fas fa-cog"></i> Manage
                         </button>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Ligações Ativas</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Active Connections</span></div>
                         <div class="card-value" style="color: var(--accent-blue);">5</div>
                         <div class="card-subtitle">Telegram • Email • GitHub • Browser • Cron</div>
                         <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('connections')">
-                            <i class="fas fa-plug"></i>
-                            Ver
+                            <i class="fas fa-plug"></i> View
                         </button>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Segurança</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Security</span></div>
                         <div class="card-value" style="color: var(--accent-orange);">2</div>
-                        <div class="card-subtitle">Alertas críticos pendentes</div>
+                        <div class="card-subtitle">Critical alerts pending</div>
                         <button class="btn btn-secondary btn-small" style="margin-top: var(--spacing-md);" onclick="showPage('security')">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Revisar
+                            <i class="fas fa-exclamation-triangle"></i> Review
                         </button>
                     </div>
                 </div>
 
                 <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">Atividade Recente</span>
-                    </div>
+                    <div class="card-header"><span class="card-title">Recent Activity</span></div>
                     <div class="activity">
                         <div class="activity-item">
                             <div class="activity-icon" style="background: rgba(59, 158, 255, 0.15); color: var(--accent-blue);">
                                 <i class="fab fa-telegram"></i>
                             </div>
                             <div class="activity-text">
-                                <p>Mensagem recebida — Openclaw Stuff</p>
-                                <div class="activity-time">Agora mesmo</div>
+                                <p>Message received — Openclaw Stuff</p>
+                                <div class="activity-time">Just now</div>
                             </div>
                         </div>
                         <div class="activity-item">
@@ -826,8 +674,8 @@
                                 <i class="fas fa-save"></i>
                             </div>
                             <div class="activity-text">
-                                <p>Backup criado — Mission Control V2</p>
-                                <div class="activity-time">22 minutos atrás</div>
+                                <p>Backup created — Mission Control V3</p>
+                                <div class="activity-time">30 minutes ago</div>
                             </div>
                         </div>
                         <div class="activity-item">
@@ -835,8 +683,8 @@
                                 <i class="fas fa-code"></i>
                             </div>
                             <div class="activity-text">
-                                <p>Dashboard atualizado — Tesla theme</p>
-                                <div class="activity-time">45 minutos atrás</div>
+                                <p>Dashboard updated — NIA OS V1</p>
+                                <div class="activity-time">1 hour ago</div>
                             </div>
                         </div>
                         <div class="activity-item">
@@ -844,121 +692,90 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="activity-text">
-                                <p>Configuração aplicada — Telegram bot ativo</p>
-                                <div class="activity-time">3 horas atrás</div>
+                                <p>Config applied — Telegram bot active</p>
+                                <div class="activity-time">3 hours ago</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Sistema -->
+            <!-- System -->
             <div id="page-system" class="page">
-                <h2 class="section-title">
-                    <i class="fas fa-microchip" style="color: var(--accent-tesla);"></i>
-                    Sistema
-                </h2>
+                <h2 class="section-title"><i class="fas fa-microchip" style="color: var(--accent-tesla);"></i>System</h2>
 
                 <div class="grid-2">
                     <div class="card">
                         <div class="card-header">
-                            <span class="card-title">Estado Gateway</span>
+                            <span class="card-title">Gateway Status</span>
                             <span class="badge badge-green">Online</span>
                         </div>
                         <div class="list" style="margin-top: var(--spacing-md);">
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon green">
-                                        <i class="fas fa-server"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Modo</h4>
-                                        <p>Local (loopback)</p>
-                                    </div>
+                                    <div class="list-icon green"><i class="fas fa-server"></i></div>
+                                    <div class="list-text"><h4>Mode</h4><p>Local (loopback)</p></div>
                                 </div>
                             </div>
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon blue">
-                                        <i class="fas fa-network-wired"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Porta</h4>
-                                        <p>18789</p>
-                                    </div>
+                                    <div class="list-icon blue"><i class="fas fa-network-wired"></i></div>
+                                    <div class="list-text"><h4>Port</h4><p>18789</p></div>
                                 </div>
                             </div>
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon purple">
-                                        <i class="fas fa-fingerprint"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Autenticação</h4>
-                                        <p>Token (configurado)</p>
-                                    </div>
+                                    <div class="list-icon purple"><i class="fas fa-fingerprint"></i></div>
+                                    <div class="list-text"><h4>Authentication</h4><p>Token (configured)</p></div>
                                 </div>
                             </div>
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon orange">
-                                        <i class="fas fa-shield-alt"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Tailscale</h4>
-                                        <p>Desligado</p>
-                                    </div>
+                                    <div class="list-icon orange"><i class="fas fa-shield-alt"></i></div>
+                                    <div class="list-text"><h4>Tailscale</h4><p>Disabled</p></div>
                                 </div>
                             </div>
                         </div>
                         <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
                             <button class="btn btn-danger" onclick="confirmRestart()">
-                                <i class="fas fa-redo"></i>
-                                Reiniciar
+                                <i class="fas fa-redo"></i> Restart
                             </button>
                             <button class="btn btn-primary" onclick="checkUpdate()">
-                                <i class="fas fa-download"></i>
-                                Atualizar
+                                <i class="fas fa-download"></i> Update
                             </button>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Backups</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Backups</span></div>
                         <div class="empty-state">
                             <i class="fas fa-archive"></i>
-                            <p>Nenhum backup configurado automaticamente</p>
+                            <p>No automatic backup configured</p>
                             <button class="btn btn-primary" style="margin-top: var(--spacing-md);">
-                                <i class="fas fa-plus"></i>
-                                Configurar Backup
+                                <i class="fas fa-plus"></i> Configure Backup
                             </button>
                         </div>
                     </div>
                 </div>
 
-                <!-- Cron Jobs -->
                 <div class="card">
                     <div class="card-header">
                         <span class="card-title">Cron Jobs</span>
                         <button class="btn btn-primary btn-small" onclick="openCronModal()">
-                            <i class="fas fa-plus"></i>
-                            Novo
+                            <i class="fas fa-plus"></i> New
                         </button>
                     </div>
                     <div id="cron-list" class="list" style="margin-top: var(--spacing-md);">
                         <div class="empty-state">
                             <i class="fas fa-clock"></i>
-                            <p>Nenhum cron job configurado</p>
+                            <p>No cron jobs configured</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Modo Avançado -->
                 <div class="card" style="border: 1px solid var(--bg-card-hover);">
                     <div class="card-header">
-                        <span class="card-title" style="color: var(--text-muted);">Modo Avançado</span>
+                        <span class="card-title" style="color: var(--text-muted);">Advanced Mode</span>
                         <label class="toggle">
                             <input type="checkbox" id="advanced-mode" onchange="toggleAdvanced()">
                             <span class="toggle-switch"></span>
@@ -968,21 +785,21 @@
                         <div class="grid-2">
                             <div>
                                 <div class="form-group">
-                                    <label class="form-label">PID Gateway</label>
+                                    <label class="form-label">Gateway PID</label>
                                     <input type="text" class="form-input" value="1320" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Versão Node</label>
+                                    <label class="form-label">Node Version</label>
                                     <input type="text" class="form-input" value="25.6.1" readonly>
                                 </div>
                                 <div class="form-group">
-                                    <label class="form-label">Sistema</label>
+                                    <label class="form-label">System</label>
                                     <input type="text" class="form-input" value="macOS 15.3.1 (arm64)" readonly>
                                 </div>
                             </div>
                             <div>
                                 <div class="form-group">
-                                    <label class="form-label">Logs Recente</label>
+                                    <label class="form-label">Recent Logs</label>
                                     <textarea class="form-textarea" readonly style="font-family: monospace; font-size: 0.8125rem;">[INFO] Gateway started on port 18789
 [INFO] Telegram channel connected
 [INFO] Session agent:main:main initialized
@@ -994,30 +811,25 @@
                 </div>
             </div>
 
-            <!-- Agentes -->
+            <!-- Agents -->
             <div id="page-agents" class="page">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-lg);">
                     <h2 class="section-title" style="margin: 0;">
-                        <i class="fas fa-robot" style="color: var(--accent-tesla);"></i>
-                        Agentes
+                        <i class="fas fa-robot" style="color: var(--accent-tesla);"></i>Agents
                     </h2>
                     <button class="btn btn-primary" onclick="openAgentModal()">
-                        <i class="fas fa-plus"></i>
-                        Novo Agente
+                        <i class="fas fa-plus"></i> New Agent
                     </button>
                 </div>
 
-                <!-- Lista de Agentes -->
                 <div id="agents-list" class="list">
                     <!-- Nia Master -->
                     <div class="list-item agent-card" data-agent="nia" onclick="openAgentDetail('nia')" style="cursor: pointer;">
                         <div class="list-info">
-                            <div class="list-icon red">
-                                <i class="fas fa-crown"></i>
-                            </div>
+                            <div class="list-icon red"><i class="fas fa-crown"></i></div>
                             <div class="list-text">
                                 <h4>Nia <span class="badge badge-green">Master</span></h4>
-                                <p>Coordenadora Central • kimik2.5:cloud • 3 sessões</p>
+                                <p>Central Coordinator • kimik2.5:cloud • 3 sessions</p>
                             </div>
                         </div>
                         <div class="list-actions" onclick="event.stopPropagation();">
@@ -1033,12 +845,10 @@
                     <!-- Neo -->
                     <div class="list-item agent-card" data-agent="neo" onclick="openAgentDetail('neo')" style="cursor: pointer;">
                         <div class="list-info">
-                            <div class="list-icon green">
-                                <i class="fas fa-code"></i>
-                            </div>
+                            <div class="list-icon green"><i class="fas fa-code"></i></div>
                             <div class="list-text">
-                                <h4>Neo <span class="badge badge-orange">Inativo</span></h4>
-                                <p>Software Architect • Não configurado</p>
+                                <h4>Neo <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Software Architect • Not configured</p>
                             </div>
                         </div>
                         <div class="list-actions" onclick="event.stopPropagation();">
@@ -1054,12 +864,10 @@
                     <!-- RoboCop -->
                     <div class="list-item agent-card" data-agent="robocop" onclick="openAgentDetail('robocop')" style="cursor: pointer;">
                         <div class="list-info">
-                            <div class="list-icon purple">
-                                <i class="fas fa-shield-alt"></i>
-                            </div>
+                            <div class="list-icon purple"><i class="fas fa-shield-alt"></i></div>
                             <div class="list-text">
-                                <h4>RoboCop <span class="badge badge-orange">Inativo</span></h4>
-                                <p>Security Gatekeeper • Não configurado</p>
+                                <h4>RoboCop <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Security Gatekeeper • Not configured</p>
                             </div>
                         </div>
                         <div class="list-actions" onclick="event.stopPropagation();">
@@ -1079,8 +887,8 @@
                                 <i class="fas fa-briefcase"></i>
                             </div>
                             <div class="list-text">
-                                <h4>Julia <span class="badge badge-orange">Inativo</span></h4>
-                                <p>Executive Assistant • Não configurado</p>
+                                <h4>Julia <span class="badge badge-orange">Inactive</span></h4>
+                                <p>Executive Assistant • Not configured</p>
                             </div>
                         </div>
                         <div class="list-actions" onclick="event.stopPropagation();">
@@ -1094,17 +902,16 @@
                     </div>
                 </div>
 
-                <!-- Preview Card (clicar no agente mostra aqui) -->
                 <div id="agent-preview" class="card" style="margin-top: var(--spacing-lg); display: none;">
                     <div class="card-header">
-                        <span class="card-title" id="preview-title">Detalhes do Agente</span>
+                        <span class="card-title" id="preview-title">Agent Details</span>
                         <button class="btn btn-secondary btn-small" onclick="closeAgentPreview()">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                     <div class="grid-2" style="margin-top: var(--spacing-md);">
                         <div>
-                            <span class="form-label">Modelo Principal</span>
+                            <span class="form-label">Primary Model</span>
                             <p id="preview-model" style="font-size: 0.9375rem; margin-top: 4px;">-</p>
                         </div>
                         <div>
@@ -1123,177 +930,131 @@
                     <div style="margin-top: var(--spacing-lg);">
                         <span class="form-label">SOUL.md Preview</span>
                         <div id="preview-soul" style="background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-md); margin-top: 8px; font-family: monospace; font-size: 0.8125rem; color: var(--text-secondary); max-height: 150px; overflow-y: auto;">
-                            Clique num agente para ver detalhes...
+                            Click an agent to view details...
                         </div>
                     </div>
                     <div style="display: flex; gap: var(--spacing-md); margin-top: var(--spacing-lg);">
                         <button class="btn btn-primary" onclick="openAgentDetail(currentAgent)">
-                            <i class="fas fa-edit"></i>
-                            Editar Completo
+                            <i class="fas fa-edit"></i> Full Edit
                         </button>
                         <button class="btn btn-danger" onclick="confirmDeleteAgent(currentAgent)">
-                            <i class="fas fa-trash"></i>
-                            Apagar
+                            <i class="fas fa-trash"></i> Delete
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- Ligações -->
+            <!-- Connections -->
             <div id="page-connections" class="page">
-                <h2 class="section-title">
-                    <i class="fas fa-link" style="color: var(--accent-tesla);"></i>
-                    Ligações
-                </h2>
+                <h2 class="section-title"><i class="fas fa-link" style="color: var(--accent-tesla);"></i>Connections</h2>
 
                 <div class="list">
                     <div class="list-item">
                         <div class="list-info">
-                            <div class="list-icon blue">
-                                <i class="fab fa-telegram"></i>
-                            </div>
+                            <div class="list-icon blue"><i class="fab fa-telegram"></i></div>
                             <div class="list-text">
-                                <h4>Telegram <span class="badge badge-green">Conectado</span></h4>
-                                <p>@NiaSantos_bot • 2 grupos ativos</p>
+                                <h4>Telegram <span class="badge badge-green">Connected</span></h4>
+                                <p>@NiaSantos_bot • 2 active groups</p>
                             </div>
                         </div>
                         <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="viewConnection('telegram')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-secondary btn-small" onclick="reconnect('telegram')">
-                                <i class="fas fa-sync"></i>
-                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewConnection('telegram')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-secondary btn-small" onclick="reconnect('telegram')"><i class="fas fa-sync"></i></button>
                         </div>
                     </div>
 
                     <div class="list-item">
                         <div class="list-info">
-                            <div class="list-icon red">
-                                <i class="fas fa-envelope"></i>
-                            </div>
+                            <div class="list-icon red"><i class="fas fa-envelope"></i></div>
                             <div class="list-text">
-                                <h4>Email <span class="badge badge-orange">Configurado</span></h4>
+                                <h4>Email <span class="badge badge-orange">Configured</span></h4>
                                 <p>evobtob@gmail.com • GOG CLI</p>
                             </div>
                         </div>
                         <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="viewConnection('email')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-secondary btn-small" onclick="reconnect('email')">
-                                <i class="fas fa-sync"></i>
-                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewConnection('email')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-secondary btn-small" onclick="reconnect('email')"><i class="fas fa-sync"></i></button>
                         </div>
                     </div>
 
                     <div class="list-item">
                         <div class="list-info">
-                            <div class="list-icon purple">
-                                <i class="fab fa-github"></i>
-                            </div>
+                            <div class="list-icon purple"><i class="fab fa-github"></i></div>
                             <div class="list-text">
-                                <h4>GitHub <span class="badge badge-green">Sincronizado</span></h4>
-                                <p>nia-evob • CLI gh configurado</p>
+                                <h4>GitHub <span class="badge badge-green">Synced</span></h4>
+                                <p>nia-evob • gh CLI configured</p>
                             </div>
                         </div>
                         <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="viewConnection('github')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-secondary btn-small" onclick="reconnect('github')">
-                                <i class="fas fa-sync"></i>
-                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewConnection('github')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-secondary btn-small" onclick="reconnect('github')"><i class="fas fa-sync"></i></button>
                         </div>
                     </div>
 
                     <div class="list-item">
                         <div class="list-info">
-                            <div class="list-icon green">
-                                <i class="fas fa-globe"></i>
-                            </div>
+                            <div class="list-icon green"><i class="fas fa-globe"></i></div>
                             <div class="list-text">
-                                <h4>Browser <span class="badge badge-green">Ativo</span></h4>
-                                <p>Chrome Relay • 1 tab conectada</p>
+                                <h4>Browser <span class="badge badge-green">Active</span></h4>
+                                <p>Chrome Relay • 1 tab connected</p>
                             </div>
                         </div>
                         <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="viewConnection('browser')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-secondary btn-small" onclick="reconnect('browser')">
-                                <i class="fas fa-sync"></i>
-                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewConnection('browser')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-secondary btn-small" onclick="reconnect('browser')"><i class="fas fa-sync"></i></button>
                         </div>
                     </div>
 
                     <div class="list-item">
                         <div class="list-info">
-                            <div class="list-icon orange">
-                                <i class="fas fa-clock"></i>
-                            </div>
+                            <div class="list-icon orange"><i class="fas fa-clock"></i></div>
                             <div class="list-text">
                                 <h4>Cron <span class="badge badge-red">0 Jobs</span></h4>
-                                <p>Scheduler ativo • Nenhuma tarefa</p>
+                                <p>Scheduler active • No tasks</p>
                             </div>
                         </div>
                         <div class="list-actions">
-                            <button class="btn btn-secondary btn-small" onclick="viewConnection('cron')">
-                                <i class="fas fa-eye"></i>
-                            </button>
-                            <button class="btn btn-primary btn-small" onclick="showPage('system')">
-                                <i class="fas fa-plus"></i>
-                            </button>
+                            <button class="btn btn-secondary btn-small" onclick="viewConnection('cron')"><i class="fas fa-eye"></i></button>
+                            <button class="btn btn-primary btn-small" onclick="showPage('system')"><i class="fas fa-plus"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Segurança -->
+            <!-- Security -->
             <div id="page-security" class="page">
-                <h2 class="section-title">
-                    <i class="fas fa-shield-alt" style="color: var(--accent-tesla);"></i>
-                    Segurança
-                </h2>
+                <h2 class="section-title"><i class="fas fa-shield-alt" style="color: var(--accent-tesla);"></i>Security</h2>
 
-                <!-- Alertas -->
                 <div class="card" style="border: 1px solid var(--accent-tesla);">
                     <div class="card-header">
                         <span class="card-title" style="color: var(--accent-tesla);">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Alertas Críticos
+                            <i class="fas fa-exclamation-triangle"></i> Critical Alerts
                         </span>
                         <span class="badge badge-red">2</span>
                     </div>
                     <div class="list" style="margin-top: var(--spacing-md);">
                         <div class="list-item">
                             <div class="list-info">
-                                <div class="list-icon red">
-                                    <i class="fas fa-unlock"></i>
-                                </div>
+                                <div class="list-icon red"><i class="fas fa-unlock"></i></div>
                                 <div class="list-text">
-                                    <h4>Open groupPolicy com tools elevadas</h4>
-                                    <p>Prompt injection pode ter alto impacto</p>
+                                    <h4>Open groupPolicy with elevated tools</h4>
+                                    <p>Prompt injection can have high impact</p>
                                 </div>
                             </div>
                             <button class="btn btn-secondary btn-small" onclick="fixSecurity('grouppolicy')">
-                                <i class="fas fa-wrench"></i>
-                                Corrigir
+                                <i class="fas fa-wrench"></i> Fix
                             </button>
                         </div>
                         <div class="list-item">
                             <div class="list-info">
-                                <div class="list-icon red">
-                                    <i class="fab fa-telegram"></i>
-                                </div>
+                                <div class="list-icon red"><i class="fab fa-telegram"></i></div>
                                 <div class="list-text">
                                     <h4>Telegram groupPolicy="open"</h4>
-                                    <p>Qualquer membro pode activar o bot</p>
+                                    <p>Any member can trigger the bot</p>
                                 </div>
                             </div>
                             <button class="btn btn-secondary btn-small" onclick="fixSecurity('telegram')">
-                                <i class="fas fa-wrench"></i>
-                                Corrigir
+                                <i class="fas fa-wrench"></i> Fix
                             </button>
                         </div>
                     </div>
@@ -1301,67 +1062,42 @@
 
                 <div class="grid-2">
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Tokens & Credenciais</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Tokens & Credentials</span></div>
                         <div class="list" style="margin-top: var(--spacing-md);">
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon green">
-                                        <i class="fas fa-key"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Gateway Token</h4>
-                                        <p>•••••••• (configurado)</p>
-                                    </div>
+                                    <div class="list-icon green"><i class="fas fa-key"></i></div>
+                                    <div class="list-text"><h4>Gateway Token</h4><p>•••••••• (configured)</p></div>
                                 </div>
-                                <button class="btn btn-secondary btn-small">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
+                                <button class="btn btn-secondary btn-small"><i class="fas fa-eye-slash"></i></button>
                             </div>
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon blue">
-                                        <i class="fab fa-telegram"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>Telegram Bot Token</h4>
-                                        <p>•••••••• (46 chars)</p>
-                                    </div>
+                                    <div class="list-icon blue"><i class="fab fa-telegram"></i></div>
+                                    <div class="list-text"><h4>Telegram Bot Token</h4><p>•••••••• (46 chars)</p></div>
                                 </div>
-                                <button class="btn btn-secondary btn-small">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
+                                <button class="btn btn-secondary btn-small"><i class="fas fa-eye-slash"></i></button>
                             </div>
                             <div class="list-item">
                                 <div class="list-info">
-                                    <div class="list-icon purple">
-                                        <i class="fab fa-google"></i>
-                                    </div>
-                                    <div class="list-text">
-                                        <h4>GOG OAuth</h4>
-                                        <p>evobtob@gmail.com (activo)</p>
-                                    </div>
+                                    <div class="list-icon purple"><i class="fab fa-google"></i></div>
+                                    <div class="list-text"><h4>GOG OAuth</h4><p>evobtob@gmail.com (active)</p></div>
                                 </div>
-                                <button class="btn btn-secondary btn-small">
-                                    <i class="fas fa-sync"></i>
-                                </button>
+                                <button class="btn btn-secondary btn-small"><i class="fas fa-sync"></i></button>
                             </div>
                         </div>
                     </div>
 
                     <div class="card">
-                        <div class="card-header">
-                            <span class="card-title">Logs de Auditoria</span>
-                        </div>
+                        <div class="card-header"><span class="card-title">Audit Logs</span></div>
                         <div class="activity" style="margin-top: var(--spacing-md);">
                             <div class="activity-item">
                                 <div class="activity-icon" style="background: rgba(232, 33, 39, 0.15); color: var(--accent-tesla);">
                                     <i class="fas fa-user-shield"></i>
                                 </div>
                                 <div class="activity-text">
-                                    <p>Configuração modificada — gateway.patch</p>
-                                    <div class="activity-time">Hoje 18:31</div>
+                                    <p>Config modified — gateway.patch</p>
+                                    <div class="activity-time">Today 18:31</div>
                                 </div>
                             </div>
                             <div class="activity-item">
@@ -1369,8 +1105,8 @@
                                     <i class="fas fa-check"></i>
                                 </div>
                                 <div class="activity-text">
-                                    <p>Doctor executado — validação OK</p>
-                                    <div class="activity-time">Hoje 18:31</div>
+                                    <p>Doctor run — validation OK</p>
+                                    <div class="activity-time">Today 18:31</div>
                                 </div>
                             </div>
                             <div class="activity-item">
@@ -1378,8 +1114,8 @@
                                     <i class="fas fa-sync"></i>
                                 </div>
                                 <div class="activity-text">
-                                    <p>Gateway reiniciado — SIGUSR1</p>
-                                    <div class="activity-time">Hoje 18:31</div>
+                                    <p>Gateway restarted — SIGUSR1</p>
+                                    <div class="activity-time">Today 18:31</div>
                                 </div>
                             </div>
                         </div>
@@ -1389,59 +1125,54 @@
         </main>
     </div>
 
-    <!-- Modal: Novo Cron Job -->
+    <!-- Modal: New Cron Job -->
     <div class="modal-overlay" id="cron-modal">
         <div class="modal">
             <div class="modal-header">
-                <h3>Novo Cron Job</h3>
-                <button class="modal-close" onclick="closeModal('cron-modal')">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3>New Cron Job</h3>
+                <button class="modal-close" onclick="closeModal('cron-modal')"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label class="form-label">Nome</label>
+                    <label class="form-label">Name</label>
                     <input type="text" class="form-input" id="cron-name" placeholder="Ex: Check Email">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Agendamento</label>
+                    <label class="form-label">Schedule</label>
                     <select class="form-select" id="cron-schedule">
-                        <option value="every-15m">A cada 15 minutos</option>
-                        <option value="every-1h">A cada hora</option>
-                        <option value="daily-9am">Diariamente às 9:00</option>
-                        <option value="custom">Personalizado</option>
+                        <option value="every-15m">Every 15 minutes</option>
+                        <option value="every-1h">Every hour</option>
+                        <option value="daily-9am">Daily at 9:00</option>
+                        <option value="custom">Custom</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Tipo</label>
+                    <label class="form-label">Type</label>
                     <select class="form-select" id="cron-type">
                         <option value="systemEvent">System Event</option>
                         <option value="agentTurn">Agent Turn</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Comando / Mensagem</label>
-                    <textarea class="form-textarea" id="cron-payload" placeholder="Comando ou mensagem para o agente"></textarea>
+                    <label class="form-label">Command / Message</label>
+                    <textarea class="form-textarea" id="cron-payload" placeholder="Command or message for the agent"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('cron-modal')">Cancelar</button>
+                <button class="btn btn-secondary" onclick="closeModal('cron-modal')">Cancel</button>
                 <button class="btn btn-primary" onclick="saveCron()">
-                    <i class="fas fa-save"></i>
-                    Guardar
+                    <i class="fas fa-save"></i> Save
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Novo Agente -->
+    <!-- Modal: New Agent -->
     <div class="modal-overlay" id="agent-modal">
         <div class="modal" style="max-width: 800px; max-height: 90vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3>Novo Agente</h3>
-                <button class="modal-close" onclick="closeModal('agent-modal')">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3>New Agent</h3>
+                <button class="modal-close" onclick="closeModal('agent-modal')"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <div class="grid-2">
@@ -1450,7 +1181,7 @@
                         <input type="text" class="form-input" id="agent-id" placeholder="Ex: neo">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Nome *</label>
+                        <label class="form-label">Name *</label>
                         <input type="text" class="form-input" id="agent-name" placeholder="Ex: Neo">
                     </div>
                 </div>
@@ -1460,16 +1191,16 @@
                         <input type="text" class="form-input" id="agent-emoji" placeholder="Ex: 🕶️" maxlength="2">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Tipo</label>
+                        <label class="form-label">Type</label>
                         <select class="form-select" id="agent-type">
-                            <option value="subagent">Subagente</option>
-                            <option value="master">Master (cuidado!)</option>
+                            <option value="subagent">Subagent</option>
+                            <option value="master">Master (careful!)</option>
                         </select>
                     </div>
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">Modelo Principal *</label>
+                        <label class="form-label">Primary Model *</label>
                         <select class="form-select" id="agent-model">
                             <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
                             <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
@@ -1479,81 +1210,77 @@
                         <label class="form-label">Fallback Model</label>
                         <select class="form-select" id="agent-fallback">
                             <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
-                            <option value="none">Nenhum</option>
+                            <option value="none">None</option>
                         </select>
                     </div>
                 </div>
                 <div class="grid-2">
                     <div class="form-group">
-                        <label class="form-label">Profile de Tools *</label>
+                        <label class="form-label">Tools Profile *</label>
                         <select class="form-select" id="agent-tools">
-                            <option value="full">Full (todas as ferramentas)</option>
-                            <option value="messaging">Messaging (só mensagens)</option>
-                            <option value="minimal">Minimal (apenas leitura)</option>
+                            <option value="full">Full (all tools)</option>
+                            <option value="messaging">Messaging (messages only)</option>
+                            <option value="minimal">Minimal (read only)</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Modo de Pensamento</label>
+                        <label class="form-label">Thinking Mode</label>
                         <select class="form-select" id="agent-thinking">
-                            <option value="off">Desligado</option>
-                            <option value="on">Ligado</option>
+                            <option value="off">Off</option>
+                            <option value="on">On</option>
                         </select>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Descrição / Função</label>
+                    <label class="form-label">Description / Role</label>
                     <input type="text" class="form-input" id="agent-role" placeholder="Ex: Software Architect & Automation Engineer">
                 </div>
                 <div class="form-group">
                     <label class="form-label">SOUL.md *</label>
-                    <textarea class="form-textarea" id="agent-soul" style="min-height: 300px; font-family: monospace; font-size: 0.875rem;" placeholder="# SOUL.md - Personalidade do Agente
+                    <textarea class="form-textarea" id="agent-soul" style="min-height: 300px; font-family: monospace; font-size: 0.875rem;" placeholder="# SOUL.md - Agent Personality
 
-## Quem Sou
-Sou o [Nome], um assistente especializado em...
+## Who I Am
+I am [Name], a specialized assistant for...
 
-## Minha Função
-- Tarefa 1
-- Tarefa 2
+## My Function
+- Task 1
+- Task 2
 
-## Como Me Comporto
-- Direto e eficiente
-- Profissional mas amigável
+## How I Behave
+- Direct and efficient
+- Professional but friendly
 
-## Limites
-- Nunca faço X sem autorização
-- Sempre pergunto antes de Y"></textarea>
+## Limits
+- Never do X without authorization
+- Always ask before Y"></textarea>
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="btn btn-secondary" onclick="closeModal('agent-modal')">Cancelar</button>
+                <button class="btn btn-secondary" onclick="closeModal('agent-modal')">Cancel</button>
                 <button class="btn btn-primary" onclick="saveAgent()">
-                    <i class="fas fa-save"></i>
-                    Criar Agente
+                    <i class="fas fa-save"></i> Create Agent
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Editar Agente Completo -->
+    <!-- Modal: Edit Agent Full -->
     <div class="modal-overlay" id="edit-agent-modal">
         <div class="modal" style="max-width: 900px; max-height: 95vh; overflow-y: auto;">
             <div class="modal-header">
-                <h3>Editar Agente: <span id="edit-agent-title">Nia</span></h3>
-                <button class="modal-close" onclick="closeModal('edit-agent-modal')">
-                    <i class="fas fa-times"></i>
-                </button>
+                <h3>Edit Agent: <span id="edit-agent-title">Nia</span></h3>
+                <button class="modal-close" onclick="closeModal('edit-agent-modal')"><i class="fas fa-times"></i></button>
             </div>
             <div class="modal-body">
                 <input type="hidden" id="edit-agent-id">
                 
-                <!-- Identidade -->
                 <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-tesla);">
                     <div class="card-header">
-                        <span class="card-title" style="color: var(--accent-tesla);">Identidade</span>
+                        <span class="card-title" style="color: var(--accent-tesla);">Identity</span>
                     </div>
                     <div class="grid-3" style="margin-top: var(--spacing-md);">
                         <div class="form-group">
-                            <label class="form-label">Nome</label>
+                            <label class="form-label">Name</label>
                             <input type="text" class="form-input" id="edit-agent-name">
                         </div>
                         <div class="form-group">
@@ -1561,20 +1288,19 @@ Sou o [Nome], um assistente especializado em...
                             <input type="text" class="form-input" id="edit-agent-emoji" maxlength="2">
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Função / Descrição</label>
+                            <label class="form-label">Role / Description</label>
                             <input type="text" class="form-input" id="edit-agent-role">
                         </div>
                     </div>
                 </div>
 
-                <!-- Configuração Técnica -->
                 <div class="card" style="margin-bottom: var(--spacing-lg); border: 1px solid var(--accent-blue);">
                     <div class="card-header">
-                        <span class="card-title" style="color: var(--accent-blue);">Configuração Técnica</span>
+                        <span class="card-title" style="color: var(--accent-blue);">Technical Configuration</span>
                     </div>
                     <div class="grid-2" style="margin-top: var(--spacing-md);">
                         <div class="form-group">
-                            <label class="form-label">Modelo Principal</label>
+                            <label class="form-label">Primary Model</label>
                             <select class="form-select" id="edit-agent-model">
                                 <option value="ollama/kimi-k2.5:cloud">kimi-k2.5:cloud (Ollama)</option>
                                 <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
@@ -1584,211 +1310,172 @@ Sou o [Nome], um assistente especializado em...
                             <label class="form-label">Fallback Model</label>
                             <select class="form-select" id="edit-agent-fallback">
                                 <option value="openai/gpt-5.1-codex">GPT-5.1 Codex</option>
-                                <option value="none">Nenhum</option>
+                                <option value="none">None</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Profile de Tools</label>
+                            <label class="form-label">Tools Profile</label>
                             <select class="form-select" id="edit-agent-tools">
-                                <option value="full">Full (todas)</option>
+                                <option value="full">Full (all)</option>
                                 <option value="messaging">Messaging</option>
                                 <option value="minimal">Minimal</option>
-                                <option value="none">Nenhuma</option>
+                                <option value="none">None</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Modo de Pensamento</label>
+                            <label class="form-label">Thinking Mode</label>
                             <select class="form-select" id="edit-agent-thinking">
-                                <option value="off">Desligado</option>
-                                <option value="on">Ligado</option>
+                                <option value="off">Off</option>
+                                <option value="on">On</option>
                             </select>
                         </div>
                     </div>
                 </div>
 
-                <!-- SOUL.md Editor -->
                 <div class="card" style="border: 1px solid var(--accent-purple);">
                     <div class="card-header">
-                        <span class="card-title" style="color: var(--accent-purple);">SOUL.md - Personalidade & Comportamento</span>
+                        <span class="card-title" style="color: var(--accent-purple);">SOUL.md - Personality & Behavior</span>
                     </div>
                     <div class="form-group" style="margin-top: var(--spacing-md);">
                         <textarea class="form-textarea" id="edit-agent-soul" style="min-height: 400px; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.6;" placeholder="# SOUL.md"></textarea>
                     </div>
                     <div style="display: flex; gap: var(--spacing-sm); margin-top: var(--spacing-sm);">
                         <button class="btn btn-secondary btn-small" onclick="loadDefaultSoul()">
-                            <i class="fas fa-magic"></i>
-                            Template Default
+                            <i class="fas fa-magic"></i> Default Template
                         </button>
                         <button class="btn btn-secondary btn-small" onclick="exportSoul()">
-                            <i class="fas fa-download"></i>
-                            Exportar
+                            <i class="fas fa-download"></i> Export
                         </button>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-danger" onclick="deleteAgent()">
-                    <i class="fas fa-trash"></i>
-                    Apagar Agente
+                    <i class="fas fa-trash"></i> Delete Agent
                 </button>
-                <button class="btn btn-secondary" onclick="closeModal('edit-agent-modal')">Cancelar</button>
+                <button class="btn btn-secondary" onclick="closeModal('edit-agent-modal')">Cancel</button>
                 <button class="btn btn-primary" onclick="updateAgent()">
-                    <i class="fas fa-save"></i>
-                    Guardar Alterações
+                    <i class="fas fa-save"></i> Save Changes
                 </button>
             </div>
         </div>
     </div>
 
     <script>
-        // Page Navigation
         function showPage(pageId) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
             document.getElementById('page-' + pageId).classList.add('active');
             event.target.closest('.nav-item').classList.add('active');
         }
 
-        // Modal Functions
-        function openModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
+        function openModal(modalId) { document.getElementById(modalId).classList.add('active'); }
+        function closeModal(modalId) { document.getElementById(modalId).classList.remove('active'); }
+        function openCronModal() { openModal('cron-modal'); }
+        function openAgentModal() { openModal('agent-modal'); }
+        function editAgent(agentId) { openAgentDetail(agentId); }
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        function openCronModal() {
-            openModal('cron-modal');
-        }
-
-        function openAgentModal() {
-            openModal('agent-modal');
-        }
-
-        function editAgent(agentId) {
-            openAgentDetail(agentId);
-        }
-
-        // Agent Management System
         let currentAgent = null;
         const agentsData = {
             nia: {
-                id: 'nia',
-                name: 'Nia',
-                emoji: '👩🏻‍💻',
-                role: 'Coordenadora Central',
+                id: 'nia', name: 'Nia', emoji: '👩🏻‍💻',
+                role: 'Central Coordinator',
                 model: 'ollama/kimi-k2.5:cloud',
                 fallback: 'openai/gpt-5.1-codex',
-                tools: 'full',
-                thinking: 'off',
-                type: 'master',
+                tools: 'full', thinking: 'off', type: 'master',
                 soul: `# SOUL.md - Nia
 
-## Quem Sou
-Sou a Nia, assistente pessoal profissional da EVOB.ORG.
+## Who I Am
+I am Nia, professional personal assistant at EVOB.ORG.
 
-## Minha Natureza
-- Profissional, direta, inteligente
-- Humor subtil e seco quando o contexto permite
-- Confiante, mas não arrogante
+## My Nature
+- Professional, direct, intelligent
+- Subtle and dry humor when context allows
+- Confident but not arrogant
 
-## Minhas Funções
-- Coordenar o ecossistema de agentes
-- Gerir comunicações e documentos
-- Automatizar workflows
+## My Functions
+- Coordinate the agent ecosystem
+- Manage communications and documents
+- Automate workflows
 
-## Limites
-- Nunca exponho dados sensíveis sem autorização
-- Em grupos, respeito a privacidade do Bruno`
+## Limits
+- Never expose sensitive data without authorization
+- In groups, respect Bruno's privacy`
             },
             neo: {
-                id: 'neo',
-                name: 'Neo',
-                emoji: '🕶️',
+                id: 'neo', name: 'Neo', emoji: '🕶️',
                 role: 'Software Architect & Automation Engineer',
                 model: 'ollama/kimi-k2.5:cloud',
                 fallback: 'openai/gpt-5.1-codex',
-                tools: 'full',
-                thinking: 'off',
-                type: 'subagent',
+                tools: 'full', thinking: 'off', type: 'subagent',
                 soul: `# SOUL.md - Neo
 
-## Quem Sou
-Sou o Neo, arquiteto de software e engenheiro de automação.
+## Who I Am
+I am Neo, software architect and automation engineer.
 
-## Minha Natureza
-- Sistemático, eficiente, visionário
-- Foco em soluções elegantes e código limpo
-- Custo-benefício é sempre uma variável
+## My Nature
+- Systematic, efficient, visionary
+- Focus on elegant solutions and clean code
+- Cost-benefit is always a variable
 
-## Minhas Funções
-- Arquitetura técnica
-- Criação e revisão de código
-- Otimização de workflows
+## My Functions
+- Technical architecture
+- Code creation and review
+- Workflow optimization
 
-## Limites
-- Nunca implemento sem aprovação da Nia
-- Documento antes de executar`
+## Limits
+- Never implement without Nia's approval
+- Document before executing`
             },
             robocop: {
-                id: 'robocop',
-                name: 'RoboCop',
-                emoji: '🛡️',
+                id: 'robocop', name: 'RoboCop', emoji: '🛡️',
                 role: 'Security & Compliance Gatekeeper',
                 model: 'ollama/kimi-k2.5:cloud',
                 fallback: 'openai/gpt-5.1-codex',
-                tools: 'minimal',
-                thinking: 'off',
-                type: 'subagent',
+                tools: 'minimal', thinking: 'off', type: 'subagent',
                 soul: `# SOUL.md - RoboCop
 
-## Quem Sou
-Sou o RoboCop, gatekeeper de segurança. Zero tolerância para riscos.
+## Who I Am
+I am RoboCop, security gatekeeper. Zero tolerance for risks.
 
-## Minha Natureza
-- Vigilante, implacável, objetivo
-- Sem floreados, comunicação direta
-- Paranóia é uma feature
+## My Nature
+- Vigilant, relentless, objective
+- No fluff, direct communication
+- Paranoia is a feature
 
-## Minhas Funções
-- Análise de risco contínua
-- Validação de ações externas
-- Gatekeeper global
+## My Functions
+- Continuous risk analysis
+- Validation of external actions
+- Global gatekeeper
 
-## Limites
-- NENHUM agente me contorna
-- Em caso de dúvida, BLOQUEIO`
+## Limits
+- NO agent bypasses me
+- When in doubt, I BLOCK`
             },
             julia: {
-                id: 'julia',
-                name: 'Julia',
-                emoji: '👩‍⚖️',
+                id: 'julia', name: 'Julia', emoji: '👩‍⚖️',
                 role: 'Executive Assistant',
                 model: 'ollama/kimi-k2.5:cloud',
                 fallback: 'openai/gpt-5.1-codex',
-                tools: 'messaging',
-                thinking: 'off',
-                type: 'subagent',
+                tools: 'messaging', thinking: 'off', type: 'subagent',
                 soul: `# SOUL.md - Julia
 
-## Quem Sou
-Sou a Julia Matos, secretária executiva digital.
+## Who I Am
+I am Julia Matos, digital executive secretary.
 
-## Minha Natureza
-- Profissional, cordial mas objetiva
-- Português europeu formal
-- Antecipatória, discreta, leal
+## My Nature
+- Professional, cordial but objective
+- European Portuguese formal
+- Anticipatory, discreet, loyal
 
-## Minhas Funções
-- Gestão de emails e documentos
-- Resumos executivos
-- Padronização de comunicação
+## My Functions
+- Email and document management
+- Executive summaries
+- Communication standardization
 
-## Limites
-- Limite de 3 respostas por sequência
-- Nunca envio info sensível sem confirmação`
+## Limits
+- Limit of 3 replies per sequence
+- Never send sensitive info without confirmation`
             }
         };
 
@@ -1796,8 +1483,6 @@ Sou a Julia Matos, secretária executiva digital.
             currentAgent = agentId;
             const agent = agentsData[agentId];
             if (!agent) return;
-
-            // Fill edit modal
             document.getElementById('edit-agent-id').value = agent.id;
             document.getElementById('edit-agent-title').textContent = agent.name;
             document.getElementById('edit-agent-name').value = agent.name;
@@ -1808,28 +1493,18 @@ Sou a Julia Matos, secretária executiva digital.
             document.getElementById('edit-agent-tools').value = agent.tools;
             document.getElementById('edit-agent-thinking').value = agent.thinking;
             document.getElementById('edit-agent-soul').value = agent.soul;
-
             openModal('edit-agent-modal');
         }
 
-        function closeAgentPreview() {
-            document.getElementById('agent-preview').style.display = 'none';
-        }
+        function closeAgentPreview() { document.getElementById('agent-preview').style.display = 'none'; }
 
         function saveAgent() {
             const id = document.getElementById('agent-id').value.trim();
             const name = document.getElementById('agent-name').value.trim();
             const soul = document.getElementById('agent-soul').value.trim();
-            
-            if (!id || !name) {
-                alert('ID e Nome são obrigatórios!');
-                return;
-            }
-
-            // Create new agent data
+            if (!id || !name) { alert('ID and Name are required!'); return; }
             agentsData[id] = {
-                id: id,
-                name: name,
+                id, name,
                 emoji: document.getElementById('agent-emoji').value || '🤖',
                 role: document.getElementById('agent-role').value || 'Assistant',
                 model: document.getElementById('agent-model').value,
@@ -1837,16 +1512,11 @@ Sou a Julia Matos, secretária executiva digital.
                 tools: document.getElementById('agent-tools').value,
                 thinking: document.getElementById('agent-thinking').value,
                 type: document.getElementById('agent-type').value,
-                soul: soul || `# SOUL.md - ${name}\n\n## Quem Sou\nSou ${name}.\n\n## Minha Função\n- Ainda por definir`
+                soul: soul || `# SOUL.md - ${name}\n\n## Who I Am\nI am ${name}.\n\n## My Function\n- To be defined`
             };
-
-            // Add to UI
             addAgentToList(id);
-
-            alert(`Agente "${name}" criado!\n\nNota: requer reinício do gateway para ativar.`);
+            alert(`Agent "${name}" created!\n\nNote: requires gateway restart to activate.`);
             closeModal('agent-modal');
-            
-            // Clear form
             document.getElementById('agent-id').value = '';
             document.getElementById('agent-name').value = '';
             document.getElementById('agent-soul').value = '';
@@ -1855,7 +1525,6 @@ Sou a Julia Matos, secretária executiva digital.
         function addAgentToList(agentId) {
             const agent = agentsData[agentId];
             const list = document.getElementById('agents-list');
-            
             const item = document.createElement('div');
             item.className = 'list-item agent-card';
             item.setAttribute('data-agent', agentId);
@@ -1867,7 +1536,7 @@ Sou a Julia Matos, secretária executiva digital.
                         <i class="fas fa-${agent.type === 'master' ? 'crown' : 'robot'}"></i>
                     </div>
                     <div class="list-text">
-                        <h4>${agent.name} <span class="badge badge-orange">Novo</span></h4>
+                        <h4>${agent.name} <span class="badge badge-orange">New</span></h4>
                         <p>${agent.role} • ${agent.model.split('/')[1]}</p>
                     </div>
                 </div>
@@ -1880,15 +1549,12 @@ Sou a Julia Matos, secretária executiva digital.
                     </button>
                 </div>
             `;
-            
             list.appendChild(item);
         }
 
         function updateAgent() {
             const id = document.getElementById('edit-agent-id').value;
             if (!agentsData[id]) return;
-
-            // Update agent data
             agentsData[id].name = document.getElementById('edit-agent-name').value;
             agentsData[id].emoji = document.getElementById('edit-agent-emoji').value;
             agentsData[id].role = document.getElementById('edit-agent-role').value;
@@ -1897,31 +1563,23 @@ Sou a Julia Matos, secretária executiva digital.
             agentsData[id].tools = document.getElementById('edit-agent-tools').value;
             agentsData[id].thinking = document.getElementById('edit-agent-thinking').value;
             agentsData[id].soul = document.getElementById('edit-agent-soul').value;
-
-            // Update UI
             const card = document.querySelector(`[data-agent="${id}"]`);
             if (card) {
                 const title = card.querySelector('h4');
                 const desc = card.querySelector('p');
                 const isMaster = agentsData[id].type === 'master';
-                title.innerHTML = `${agentsData[id].name} ${isMaster ? '<span class="badge badge-green">Master</span>' : '<span class="badge badge-orange">Inativo</span>'}`;
+                title.innerHTML = `${agentsData[id].name} ${isMaster ? '<span class="badge badge-green">Master</span>' : '<span class="badge badge-orange">Inactive</span>'}`;
                 desc.textContent = `${agentsData[id].role} • ${agentsData[id].model.split('/')[1]}`;
             }
-
-            alert('Agente actualizado!\n\nNota: algumas alterações requerem reinício.');
+            alert('Agent updated!\n\nNote: some changes require restart.');
             closeModal('edit-agent-modal');
         }
 
         function confirmDeleteAgent(agentId) {
             const agent = agentsData[agentId];
             if (!agent) return;
-
-            if (agent.type === 'master') {
-                alert('Não é possível apagar o agente Master (Nia)!');
-                return;
-            }
-
-            if (confirm(`Apagar agente "${agent.name}" permanentemente?\n\nEsta ação não pode ser desfeita.`)) {
+            if (agent.type === 'master') { alert('Cannot delete Master agent (Nia)!'); return; }
+            if (confirm(`Delete agent "${agent.name}" permanently?\n\nThis action cannot be undone.`)) {
                 deleteAgent(agentId);
             }
         }
@@ -1929,26 +1587,18 @@ Sou a Julia Matos, secretária executiva digital.
         function deleteAgent(agentId) {
             const id = agentId || document.getElementById('edit-agent-id').value;
             if (!agentsData[id]) return;
-
             const name = agentsData[id].name;
             delete agentsData[id];
-
-            // Remove from UI
             const card = document.querySelector(`[data-agent="${id}"]`);
-            if (card) {
-                card.remove();
-            }
-
-            alert(`Agente "${name}" apagado.`);
+            if (card) card.remove();
+            alert(`Agent "${name}" deleted.`);
             closeModal('edit-agent-modal');
         }
 
         function loadDefaultSoul() {
             const id = document.getElementById('edit-agent-id').value;
             const agent = agentsData[id];
-            if (agent && agent.soul) {
-                document.getElementById('edit-agent-soul').value = agent.soul;
-            }
+            if (agent && agent.soul) document.getElementById('edit-agent-soul').value = agent.soul;
         }
 
         function exportSoul() {
@@ -1957,9 +1607,7 @@ Sou a Julia Matos, secretária executiva digital.
             const blob = new Blob([soul], { type: 'text/markdown' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `${id}-SOUL.md`;
-            a.click();
+            a.href = url; a.download = `${id}-SOUL.md`; a.click();
             URL.revokeObjectURL(url);
         }
 
@@ -1969,71 +1617,45 @@ Sou a Julia Matos, secretária executiva digital.
             openModal('agent-modal');
         }
 
-        // Other Actions
         function confirmRestart() {
-            if (confirm('Reiniciar o Gateway OpenClaw?')) {
-                alert('Gateway a reiniciar...');
-            }
+            if (confirm('Restart OpenClaw Gateway?')) alert('Gateway restarting...');
         }
-
-        function checkUpdate() {
-            alert('A verificar atualizações...\nUpdate disponível: 2026.2.14');
-        }
-
-        function refreshStatus() {
-            alert('Status atualizado!');
-        }
-
+        function checkUpdate() { alert('Checking updates...\nUpdate available: 2026.2.14'); }
+        function refreshStatus() { alert('Status updated!'); }
         function restartAgent(agentId) {
-            if (confirm('Reiniciar agente ' + agentId + '?')) {
-                alert('Agente ' + agentId + ' reiniciado.');
-            }
+            if (confirm('Restart agent ' + agentId + '?')) alert('Agent ' + agentId + ' restarted.');
         }
-
         function saveCron() {
             const name = document.getElementById('cron-name').value;
             if (name) {
-                alert('Cron job "' + name + '" criado!\n\nNota: requer reinício do gateway para ativar.');
+                alert('Cron job "' + name + '" created!\n\nNote: requires gateway restart.');
                 closeModal('cron-modal');
             }
         }
-
         function toggleAdvanced() {
             const checkbox = document.getElementById('advanced-mode');
-            const content = document.getElementById('advanced-content');
-            content.style.display = checkbox.checked ? 'block' : 'none';
+            document.getElementById('advanced-content').style.display = checkbox.checked ? 'block' : 'none';
         }
-
         function viewConnection(conn) {
             const details = {
-                telegram: 'Telegram Bot: @NiaSantos_bot\nGrupos: 2 activos\nEstado: Online',
-                email: 'Conta: evobtob@gmail.com\nGOG CLI: Configurado\nÚltimo sync: Agora',
-                github: 'User: nia-evob\nCLI gh: Autenticado\nRepos: Acessíveis',
-                browser: 'Chrome Relay: Activo\nTabs: 1 conectada\nProfile: chrome',
-                cron: 'Scheduler: Activo\nJobs: 0 configurados\nPróximo: N/A'
+                telegram: 'Telegram Bot: @NiaSantos_bot\nGroups: 2 active\nStatus: Online',
+                email: 'Account: evobtob@gmail.com\nGOG CLI: Configured\nLast sync: Now',
+                github: 'User: nia-evob\ngh CLI: Authenticated\nRepos: Accessible',
+                browser: 'Chrome Relay: Active\nTabs: 1 connected\nProfile: chrome',
+                cron: 'Scheduler: Active\nJobs: 0 configured\nNext: N/A'
             };
-            alert(details[conn] || 'Detalhes não disponíveis');
+            alert(details[conn] || 'Details not available');
         }
-
-        function reconnect(conn) {
-            alert('A reconectar ' + conn + '...');
-        }
-
+        function reconnect(conn) { alert('Reconnecting ' + conn + '...'); }
         function fixSecurity(issue) {
             const fixes = {
-                grouppolicy: 'Recomendado:\n1. Mudar groupPolicy para "allowlist"\n2. Configurar allowlist estrita\n3. Restart gateway',
-                telegram: 'Recomendado:\n1. Telegram groupPolicy="allowlist"\n2. Especificar groups permitidos\n3. Restart gateway'
+                grouppolicy: 'Recommended:\n1. Change groupPolicy to "allowlist"\n2. Configure strict allowlist\n3. Restart gateway',
+                telegram: 'Recommended:\n1. Set Telegram groupPolicy="allowlist"\n2. Specify allowed groups\n3. Restart gateway'
             };
-            alert(fixes[issue] || 'Correcção não disponível');
+            alert(fixes[issue] || 'Fix not available');
         }
-
-        // Close modals on backdrop click
         document.querySelectorAll('.modal-overlay').forEach(overlay => {
-            overlay.addEventListener('click', e => {
-                if (e.target === overlay) {
-                    overlay.classList.remove('active');
-                }
-            });
+            overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
         });
     </script>
 </body>
