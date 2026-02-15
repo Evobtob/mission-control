@@ -2259,7 +2259,17 @@ I am Julia Matos, digital executive secretary.
             connected: false
         };
 
+        // Detect if running in local mode (same origin)
+        function isLocalMode() {
+            return window.location.port === '8080' || window.location.hostname === 'localhost' && window.location.port !== '';
+        }
+
         function getApiUrl(endpoint) {
+            // If running locally on port 8080, use the same port (proxy mode)
+            // Otherwise, try direct connection to gateway
+            if (isLocalMode()) {
+                return `${window.location.origin}${endpoint}`;
+            }
             return `http://${OPENCLAW_CONFIG.host}:${OPENCLAW_CONFIG.port}${endpoint}`;
         }
 
@@ -2288,14 +2298,24 @@ I am Julia Matos, digital executive secretary.
         function showConnectionError(message) {
             const statusText = document.getElementById('gateway-status-text');
             const state = document.getElementById('gateway-state');
-            if (statusText) {
-                statusText.textContent = 'OFFLINE (CORS)';
-                statusText.style.color = 'var(--accent-tesla)';
-            }
-            if (state) state.textContent = 'CORS Blocked';
 
             // Check if running on GitHub Pages
             const isGitHubPages = window.location.hostname.includes('github.io');
+
+            if (isGitHubPages) {
+                if (statusText) {
+                    statusText.textContent = 'OFFLINE (CORS)';
+                    statusText.style.color = 'var(--accent-tesla)';
+                }
+                if (state) state.textContent = 'Use Local Mode';
+            } else {
+                // Local mode - probably gateway not running
+                if (statusText) {
+                    statusText.textContent = 'OFFLINE';
+                    statusText.style.color = 'var(--accent-tesla)';
+                }
+                if (state) state.textContent = 'Check Gateway';
+            }
 
             if (isGitHubPages && !window.corsWarningShown) {
                 window.corsWarningShown = true;
@@ -2318,7 +2338,29 @@ I am Julia Matos, digital executive secretary.
         }
 
         function showCORSHelp() {
-            alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
+            const isLocal = isLocalMode();
+
+            if (isLocal) {
+                alert(`🔧 MODO LOCAL - Verificação
+
+Estás a correr em modo local (localhost:8080).
+
+Se ainda não está sincronizado:
+
+1. Verifica se o gateway está a correr:
+   openclaw gateway status
+
+2. Se não estiver, inicia-o:
+   openclaw gateway start
+
+3. Recarrega a página
+
+4. Introduz o token se pedido:
+   cat ~/.openclaw/openclaw.json | grep token
+
+O servidor local já está configurado com proxy automático!`);
+            } else {
+                alert(`🔧 COMO SINCRONIZAR COM O OPENCLAW
 
 O Mission Control no GitHub Pages não consegue ligar-se ao gateway OpenClaw em localhost:18789 por causa das restrições de segurança do browser (CORS).
 
@@ -2335,6 +2377,7 @@ SOLUÇÃO - Modo Local:
 4. Agora tem sincronização completa com OpenClaw!
 
 O token é guardado automaticamente.`);
+            }
         }
 
         // Fetch Gateway Status
@@ -2559,7 +2602,13 @@ O token é guardado automaticamente.`);
 
         // Setup Token Input
         function setupApiToken() {
-            if (!OPENCLAW_CONFIG.token) {
+            // Check if we're in local mode and try auto-connect
+            if (isLocalMode() && !OPENCLAW_CONFIG.token) {
+                // Try to connect without token first (local mode might work without)
+                console.log('Local mode detected - attempting auto-connect');
+            }
+
+            if (!OPENCLAW_CONFIG.token && !isLocalMode()) {
                 const token = prompt('Enter OpenClaw gateway token for live data sync:\n\n(Leave empty for demo mode)\n\nTo get token: cat ~/.openclaw/openclaw.json | grep token');
                 if (token) {
                     OPENCLAW_CONFIG.token = token;
