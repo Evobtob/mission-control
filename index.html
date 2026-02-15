@@ -630,15 +630,6 @@
                     <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
                         <i class="fas fa-sync"></i> Refresh All
                     </button>
-                    </div>
-                    <div class="hero-meta">
-                        <span><i class="fas fa-brain"></i> Model: kimi-k2.5-cloud</span>
-                        <span><i class="fas fa-clock"></i> Gateway: Online</span>
-                        <span><i class="fas fa-code-branch"></i> v2026.2.13</span>
-                    </div>
-                    <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshStatus()">
-                        <i class="fas fa-sync"></i> Refresh
-                    </button>
                 </div>
 
                 <div class="grid-4">
@@ -2261,7 +2252,7 @@ I am Julia Matos, digital executive secretary.
 
         // Detect if running in local mode (same origin)
         function isLocalMode() {
-            return window.location.port === '8080' || window.location.hostname === 'localhost' && window.location.port !== '';
+            return window.location.port === '8888' || window.location.port === '8080' || (window.location.hostname === 'localhost' && window.location.port !== '');
         }
 
         function getApiUrl(endpoint) {
@@ -2363,20 +2354,20 @@ I am Julia Matos, digital executive secretary.
             if (isLocal) {
                 alert(`🔧 MODO LOCAL - Arquitetura com Bridge
 
-Estás a correr em modo local (localhost:8080).
+Estás a correr em modo local (localhost:8888).
 
 Para sincronização completa com OpenClaw, precisas de 2 servidores:
 
-1. OpenClaw Bridge (porta 18790):
+1. OpenClaw Bridge (porta 18791):
    cd ~/.openclaw/workspace/mission-control
    python3 openclaw-bridge.py
 
-2. Mission Control Server (porta 8080):
+2. Mission Control Server (porta 8888):
    cd ~/.openclaw/workspace/mission-control
    python3 local/server.py
 
 3. Abre no browser:
-   http://localhost:8080
+   http://localhost:8888
 
 ⚠️ IMPORTANTE: O Bridge é necessário porque o gateway OpenClaw (18789) não expõe API REST pública.
 O Bridge executa comandos CLI e expõe REST API para o Mission Control.`);
@@ -2398,7 +2389,12 @@ SOLUÇÃO - Modo Local com Bridge:
    python3 local/server.py
 
 2. Abre no browser:
-   http://localhost:8080
+   http://localhost:8888
+
+3. Agora tens sincronização completa!`);
+
+2. Abre no browser:
+   http://localhost:8888
 
 3. Agora tens sincronização completa!`);
             }
