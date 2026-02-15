@@ -616,8 +616,19 @@
         <main class="main">
             <!-- Overview -->
             <div id="page-overview" class="page active">
-                <div class="hero">
-                    <h1 class="hero-title">Mission Control <span style="font-size: 0.4em; color: var(--accent-tesla); vertical-align: super;">v1.2</span></h1>
+                <div class="hero" style="padding: var(--spacing-xl) 0;">
+                    <div class="hero-status">
+                        <span class="status-dot"></span>
+                        <span>Status: <strong style="color: var(--accent-green);" id="gateway-status-text">ACTIVE</strong></span>
+                    </div>
+                    <div class="hero-meta">
+                        <span><i class="fas fa-brain"></i> Model: <span id="current-model">kimi-k2.5-cloud</span></span>
+                        <span><i class="fas fa-clock"></i> Gateway: <span id="gateway-state">Online</span></span>
+                        <span><i class="fas fa-code-branch"></i> <span id="gateway-version">v2026.2.13</span></span>
+                    </div>
+                    <button class="btn btn-primary" style="margin-top: var(--spacing-lg);" onclick="refreshAllData()">
+                        <i class="fas fa-sync"></i> Refresh All
+                    </button>
                     <div class="hero-status">
                         <span class="status-dot"></span>
                         <span>Status: <strong style="color: var(--accent-green);">ACTIVE</strong></span>
@@ -2222,8 +2233,284 @@ I am Julia Matos, digital executive secretary.
                 badge.textContent = 'v1.1';
                 selector.value = './v1.1/';
             } else {
-                badge.textContent = 'v1.1 (latest)';
+                badge.textContent = 'v1.2';
                 selector.value = './';
+            }
+        }
+
+        // ==================== OPENCLAW API INTEGRATION ====================
+        const OPENCLAW_CONFIG = {
+            host: 'localhost',
+            port: 18789,
+            token: localStorage.getItem('openclaw_token') || '',
+            connected: false
+        };
+
+        function getApiUrl(endpoint) {
+            return `http://${OPENCLAW_CONFIG.host}:${OPENCLAW_CONFIG.port}${endpoint}`;
+        }
+
+        function getHeaders() {
+            return {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${OPENCLAW_CONFIG.token}`
+            };
+        }
+
+        async function openclawRequest(endpoint, options = {}) {
+            try {
+                const response = await fetch(getApiUrl(endpoint), {
+                    ...options,
+                    headers: { ...getHeaders(), ...options.headers }
+                });
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error('OpenClaw API Error:', error);
+                showConnectionError(error.message);
+                return null;
+            }
+        }
+
+        function showConnectionError(message) {
+            const statusText = document.getElementById('gateway-status-text');
+            const state = document.getElementById('gateway-state');
+            if (statusText) {
+                statusText.textContent = 'OFFLINE';
+                statusText.style.color = 'var(--accent-tesla)';
+            }
+            if (state) state.textContent = 'Disconnected';
+            console.warn('Mission Control: Connect to OpenClaw gateway to enable live data. Run: openclaw gateway status');
+        }
+
+        // Fetch Gateway Status
+        async function fetchGatewayStatus() {
+            const data = await openclawRequest('/api/v1/gateway/status');
+            if (data && data.ok) {
+                OPENCLAW_CONFIG.connected = true;
+                updateGatewayStatus(data.result);
+            }
+            return data;
+        }
+
+        function updateGatewayStatus(status) {
+            const statusText = document.getElementById('gateway-status-text');
+            const state = document.getElementById('gateway-state');
+            const version = document.getElementById('gateway-version');
+            const model = document.getElementById('current-model');
+
+            if (statusText) {
+                statusText.textContent = status.running ? 'ACTIVE' : 'INACTIVE';
+                statusText.style.color = status.running ? 'var(--accent-green)' : 'var(--accent-tesla)';
+            }
+            if (state) state.textContent = status.running ? 'Online' : 'Offline';
+            if (version) version.textContent = status.version || 'v2026.2.13';
+            if (model) model.textContent = status.model || 'kimi-k2.5-cloud';
+        }
+
+        // Fetch Cron Jobs
+        async function fetchCronJobs() {
+            const data = await openclawRequest('/api/v1/cron/list');
+            if (data && data.ok && data.result && data.result.jobs) {
+                cronJobsData = {};
+                data.result.jobs.forEach(job => {
+                    cronJobsData[job.id] = {
+                        id: job.id,
+                        name: job.name || job.id,
+                        description: job.description || '',
+                        scheduleType: job.schedule?.kind || 'every',
+                        interval: job.schedule?.everyMs ? formatInterval(job.schedule.everyMs) : '15m',
+                        cronExpr: job.schedule?.expr || '',
+                        payloadType: job.payload?.kind || 'systemEvent',
+                        payload: job.payload?.text || job.payload?.message || '',
+                        enabled: job.enabled !== false,
+                        created: job.createdAt,
+                        lastRun: job.lastRunAt,
+                        nextRun: job.nextRunAt
+                    };
+                });
+                renderCronJobs();
+            }
+            return data;
+        }
+
+        function formatInterval(ms) {
+            const minutes = Math.floor(ms / 60000);
+            if (minutes < 60) return `${minutes}m`;
+            const hours = Math.floor(minutes / 60);
+            if (hours < 24) return `${hours}h`;
+            return `${Math.floor(hours / 24)}d`;
+        }
+
+        // Create/Update Cron Job via API
+        async function apiSaveCronJob(jobData) {
+            const schedule = jobData.scheduleType === 'cron' 
+                ? { kind: 'cron', expr: jobData.cronExpr, tz: 'Europe/Lisbon' }
+                : { kind: 'every', everyMs: parseInterval(jobData.interval) };
+
+            const payload = jobData.payloadType === 'agentTurn'
+                ? { kind: 'agentTurn', message: jobData.payload, model: 'ollama/kimi-k2.5:cloud' }
+                : { kind: 'systemEvent', text: jobData.payload };
+
+            const job = {
+                name: jobData.name,
+                schedule,
+                payload,
+                enabled: jobData.enabled,
+                sessionTarget: jobData.payloadType === 'agentTurn' ? 'isolated' : 'main'
+            };
+
+            const data = await openclawRequest('/api/v1/cron/add', {
+                method: 'POST',
+                body: JSON.stringify({ job })
+            });
+
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        function parseInterval(interval) {
+            const num = parseInt(interval);
+            const unit = interval.slice(-1);
+            const multipliers = { m: 60000, h: 3600000, d: 86400000 };
+            return num * (multipliers[unit] || 60000);
+        }
+
+        // Delete Cron Job via API
+        async function apiDeleteCronJob(jobId) {
+            const data = await openclawRequest('/api/v1/cron/remove', {
+                method: 'POST',
+                body: JSON.stringify({ jobId })
+            });
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        // Toggle Cron Job via API
+        async function apiToggleCronJob(jobId, enabled) {
+            const data = await openclawRequest('/api/v1/cron/update', {
+                method: 'POST',
+                body: JSON.stringify({ jobId, patch: { enabled } })
+            });
+            if (data && data.ok) {
+                await fetchCronJobs();
+                return true;
+            }
+            return false;
+        }
+
+        // Fetch Sessions
+        async function fetchSessions() {
+            const data = await openclawRequest('/api/v1/sessions/list');
+            if (data && data.ok && data.result) {
+                updateSessionsDisplay(data.result.sessions || []);
+            }
+            return data;
+        }
+
+        function updateSessionsDisplay(sessions) {
+            const activeCount = sessions.filter(s => !s.abortedLastRun).length;
+            const totalTokens = sessions.reduce((sum, s) => sum + (s.totalTokens || 0), 0);
+            
+            // Update KPI cards if they exist
+            const sessionsCard = document.getElementById('active-sessions-count');
+            if (sessionsCard) sessionsCard.textContent = activeCount;
+        }
+
+        // Refresh All Data
+        async function refreshAllData() {
+            await fetchGatewayStatus();
+            await fetchCronJobs();
+            await fetchSessions();
+            
+            if (OPENCLAW_CONFIG.connected) {
+                alert('Data synchronized with OpenClaw gateway!');
+            } else {
+                alert('Note: Running in demo mode. Connect to OpenClaw gateway for live data.');
+            }
+        }
+
+        // Override save functions to use API when connected
+        const originalSaveCronJob = saveCronJob;
+        saveCronJob = async function() {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                // Fallback to local storage mode
+                return originalSaveCronJob();
+            }
+
+            const id = currentCronJobId || 'cron_' + Date.now();
+            const name = document.getElementById('cron-job-name').value.trim();
+            if (!name) { alert('Job name is required!'); return; }
+
+            const payload = document.getElementById('cron-job-payload').value.trim();
+            if (!payload) { alert('Command/Message is required!'); return; }
+
+            const jobData = {
+                id,
+                name,
+                description: document.getElementById('cron-job-desc').value.trim(),
+                scheduleType: document.getElementById('cron-job-schedule-type').value,
+                interval: document.getElementById('cron-job-interval').value,
+                cronExpr: document.getElementById('cron-job-cron-expr').value.trim(),
+                payloadType: document.getElementById('cron-job-payload-type').value,
+                payload,
+                enabled: document.getElementById('cron-job-enabled').checked
+            };
+
+            if (await apiSaveCronJob(jobData)) {
+                closeModal('cron-page-modal');
+                alert(currentCronJobId ? 'Cron job updated!' : 'Cron job created!');
+            } else {
+                alert('Failed to save cron job. Check console for details.');
+            }
+        };
+
+        const originalDeleteCronJob = deleteCronJob;
+        deleteCronJob = async function(jobId) {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                return originalDeleteCronJob(jobId);
+            }
+
+            if (confirm('Delete this cron job?')) {
+                if (await apiDeleteCronJob(jobId)) {
+                    alert('Cron job deleted.');
+                } else {
+                    alert('Failed to delete cron job.');
+                }
+            }
+        };
+
+        const originalToggleCronJob = toggleCronJob;
+        toggleCronJob = async function(jobId) {
+            if (!OPENCLAW_CONFIG.connected || !OPENCLAW_CONFIG.token) {
+                return originalToggleCronJob(jobId);
+            }
+
+            const job = cronJobsData[jobId];
+            if (job) {
+                const newEnabled = !job.enabled;
+                if (await apiToggleCronJob(jobId, newEnabled)) {
+                    alert(`Cron job ${newEnabled ? 'enabled' : 'paused'}.`);
+                } else {
+                    alert('Failed to toggle cron job.');
+                }
+            }
+        };
+
+        // Setup Token Input
+        function setupApiToken() {
+            if (!OPENCLAW_CONFIG.token) {
+                const token = prompt('Enter OpenClaw gateway token for live data sync:\n\n(Leave empty for demo mode)\n\nTo get token: cat ~/.openclaw/openclaw.json | grep token');
+                if (token) {
+                    OPENCLAW_CONFIG.token = token;
+                    localStorage.setItem('openclaw_token', token);
+                }
             }
         }
 
@@ -2231,6 +2518,17 @@ I am Julia Matos, digital executive secretary.
         renderTasks();
         renderCronJobs();
         detectVersion();
+        setupApiToken();
+        
+        // Try to connect on load
+        setTimeout(() => {
+            fetchGatewayStatus().then(() => {
+                if (OPENCLAW_CONFIG.connected) {
+                    fetchCronJobs();
+                    fetchSessions();
+                }
+            });
+        }, 1000);
     </script>
 </body>
 </html>
