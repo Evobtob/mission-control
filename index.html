@@ -608,25 +608,25 @@
             </div>
 
             <div class="nav">
-                <a href="#page-overview" class="nav-item active" data-page="overview" onclick="showTab('overview'); return false;">
+                <a href="#page-overview" class="nav-item active" data-page="overview" onclick="updateNavActive('overview')">
                     <i class="fas fa-home"></i><span>Overview</span>
                 </a>
-                <a href="#page-system" class="nav-item" data-page="system" onclick="showTab('system'); return false;">
+                <a href="#page-system" class="nav-item" data-page="system" onclick="updateNavActive('system')">
                     <i class="fas fa-microchip"></i><span>System</span>
                 </a>
-                <a href="#page-agents" class="nav-item" data-page="agents" onclick="showTab('agents'); return false;">
+                <a href="#page-agents" class="nav-item" data-page="agents" onclick="updateNavActive('agents')">
                     <i class="fas fa-robot"></i><span>Agents</span>
                 </a>
-                <a href="#page-connections" class="nav-item" data-page="connections" onclick="showTab('connections'); return false;">
+                <a href="#page-connections" class="nav-item" data-page="connections" onclick="updateNavActive('connections')">
                     <i class="fas fa-link"></i><span>Connections</span>
                 </a>
-                <a href="#page-security" class="nav-item" data-page="security" onclick="showTab('security'); return false;">
+                <a href="#page-security" class="nav-item" data-page="security" onclick="updateNavActive('security')">
                     <i class="fas fa-shield-alt"></i><span>Security</span>
                 </a>
-                <a href="#page-tasks" class="nav-item" data-page="tasks" onclick="showTab('tasks'); return false;">
+                <a href="#page-tasks" class="nav-item" data-page="tasks" onclick="updateNavActive('tasks')">
                     <i class="fas fa-tasks"></i><span>Tasks</span>
                 </a>
-                <a href="#page-cron" class="nav-item" data-page="cron" onclick="showTab('cron'); return false;">
+                <a href="#page-cron" class="nav-item" data-page="cron" onclick="updateNavActive('cron')">
                     <i class="fas fa-clock"></i><span>Cron Jobs</span>
                 </a>
             </div>
@@ -2700,34 +2700,33 @@ SOLUÇÃO - Modo Local com Bridge:
             });
         }, 1000);
 
-        // Simple tab navigation
-        function showTab(tabId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(function(p) {
-                p.classList.remove('active');
-            });
-            // Show selected page
-            var target = document.getElementById('page-' + tabId);
-            if (target) target.classList.add('active');
-            
-            // Update nav active state
+        // Just update nav active state - CSS :target handles page visibility
+        function updateNavActive(tabId) {
             document.querySelectorAll('.nav-item').forEach(function(n) {
                 n.classList.remove('active');
             });
             var activeNav = document.querySelector('.nav-item[data-page="' + tabId + '"]');
             if (activeNav) activeNav.classList.add('active');
-            
-            // Update URL hash
-            window.location.hash = 'page-' + tabId;
         }
         
         // Handle initial hash on load
-        if (window.location.hash) {
+        window.addEventListener('load', function() {
             var hash = window.location.hash.replace('#page-', '');
-            if (hash && hash !== 'page-overview') {
-                setTimeout(function() { showTab(hash); }, 0);
+            if (hash && hash !== 'overview') {
+                updateNavActive(hash);
             }
-        }
+        });
+        
+        // Also handle hash changes (back/forward buttons)
+        window.addEventListener('hashchange', function() {
+            var hash = window.location.hash.replace('#page-', '');
+            if (hash) {
+                updateNavActive(hash);
+            } else {
+                // No hash = overview
+                updateNavActive('overview');
+            }
+        });
     </script>
 </body>
 </html>
