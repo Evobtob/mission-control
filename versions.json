@@ -1,1 +1,29 @@
-["v1.0", "v1.1"]
+{
+  "current": "v1.2",
+  "versions": [
+    {
+      "version": "v1.2",
+      "date": "2026-02-15",
+      "commit": "d602bfa",
+      "path": "./",
+      "description": "Versioning system with folder-based rollbacks + version selector",
+      "stable": true
+    },
+    {
+      "version": "v1.1",
+      "date": "2026-02-15",
+      "commit": "9f911ab",
+      "path": "./v1.1/",
+      "description": "Tasks and Cron Jobs tabs with full CRUD",
+      "stable": true
+    },
+    {
+      "version": "v1.0",
+      "date": "2026-02-15",
+      "commit": "17eea3e",
+      "path": "./v1.0/",
+      "description": "Full English version + Agent Management",
+      "stable": true
+    }
+  ]
+}
